@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "normal": [
+      {
+        "model": "alexscaves:radrock"
+      },
+      {
+        "model": "alexscaves:radrock",
+        "y": 90
+      },
+      {
+        "model": "alexscaves:radrock",
+        "y": 180
+      },
+      {
+        "model": "alexscaves:radrock",
+        "y": 270
+      }
+    ]
+  }
+}

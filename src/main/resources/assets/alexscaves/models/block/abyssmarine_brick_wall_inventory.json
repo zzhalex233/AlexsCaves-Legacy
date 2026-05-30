@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "alexscaves:block/abyssmarine_bricks"
+  }
+}

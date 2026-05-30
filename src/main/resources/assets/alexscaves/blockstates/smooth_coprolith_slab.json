@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=bottom,variant=default": {
+      "model": "alexscaves:smooth_coprolith_slab"
+    },
+    "half=top,variant=default": {
+      "model": "alexscaves:smooth_coprolith_slab_top"
+    }
+  }
+}

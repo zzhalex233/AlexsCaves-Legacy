@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "normal": [
+      {
+        "model": "alexscaves:wafer_cookie_block"
+      }
+    ]
+  }
+}

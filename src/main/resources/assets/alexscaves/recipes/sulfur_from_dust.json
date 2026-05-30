@@ -1,0 +1,17 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "SSS",
+    "SSS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "dustSulfur"
+    }
+  },
+  "result": {
+    "item": "alexscaves:sulfur"
+  }
+}

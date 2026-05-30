@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "normal": [
+      {
+        "model": "alexscaves:gingerbread_block"
+      }
+    ]
+  }
+}

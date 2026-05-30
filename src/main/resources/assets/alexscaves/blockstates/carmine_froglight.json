@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "alexscaves:carmine_froglight_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "alexscaves:carmine_froglight"
+    },
+    "axis=z": {
+      "model": "alexscaves:carmine_froglight_horizontal",
+      "x": 90
+    }
+  }
+}

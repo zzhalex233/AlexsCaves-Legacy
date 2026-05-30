@@ -1,0 +1,6 @@
+﻿{
+    "parent": "minecraft:block/wall_post",
+    "textures": {
+        "wall": "alexscaves:block/wafer_cookie_block"
+    }
+}

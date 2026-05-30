@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "alexscaves:abyssmarine_pillar",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "alexscaves:abyssmarine_pillar"
+    },
+    "axis=z": {
+      "model": "alexscaves:abyssmarine_pillar",
+      "x": 90
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SDS",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "alexscaves:shadow_silk"
+    },
+    "D": {
+      "item": "alexscaves:pure_darkness"
+    }
+  },
+  "result": {
+    "item": "alexscaves:hood_of_darkness"
+  }
+}

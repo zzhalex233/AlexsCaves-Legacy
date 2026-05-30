@@ -1,0 +1,22 @@
+{
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "item": "alexscaves:ferrouslime_ball"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    {
+      "item": "minecraft:gravel"
+    },
+    {
+      "item": "minecraft:gravel"
+    }
+  ],
+  "result": {
+    "item": "alexscaves:metal_swarf",
+    "count": 2
+  }
+}

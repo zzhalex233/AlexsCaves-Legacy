@@ -1,0 +1,22 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "LLL",
+    "LDL",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "type": "forge:ore_dict",
+      "ore": "rockCandy"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "dyeLightBlue"
+    }
+  },
+  "result": {
+    "item": "alexscaves:rock_candy_light_blue",
+    "count": 8
+  }
+}

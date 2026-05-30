@@ -1,0 +1,14 @@
+{
+  "type": "forge:ore_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "pewenLog"
+    }
+  ],
+  "result": {
+    "item": "alexscaves:pewen_planks",
+    "count": 4
+  }
+}

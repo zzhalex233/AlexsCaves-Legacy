@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=bottom,variant=default": {
+      "model": "alexscaves:cinder_block_slab"
+    },
+    "half=top,variant=default": {
+      "model": "alexscaves:cinder_block_slab_top"
+    }
+  }
+}

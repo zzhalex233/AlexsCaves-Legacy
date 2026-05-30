@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=bottom,variant=default": {
+      "model": "alexscaves:guanostone_slab"
+    },
+    "half=top,variant=default": {
+      "model": "alexscaves:guanostone_slab_top"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=bottom,variant=default": {
+      "model": "alexscaves:abyssmarine_slab"
+    },
+    "half=top,variant=default": {
+      "model": "alexscaves:abyssmarine_slab_top"
+    }
+  }
+}

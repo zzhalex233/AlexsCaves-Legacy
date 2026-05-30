@@ -1,0 +1,24 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "GCG",
+    "CRC",
+    "GCG"
+  ],
+  "key": {
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "gelatin"
+    },
+    "C": {
+      "item": "alexscaves:caramel"
+    },
+    "R": {
+      "item": "alexscaves:radiant_essence"
+    }
+  },
+  "result": {
+    "item": "alexscaves:sundrop",
+    "count": 2
+  }
+}

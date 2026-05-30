@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "alexscaves:item/gelatin_red"
+  }
+}

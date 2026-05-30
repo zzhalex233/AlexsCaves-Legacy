@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "variant=default": {
+      "model": "alexscaves:frosted_gingerbread_block"
+    }
+  }
+}

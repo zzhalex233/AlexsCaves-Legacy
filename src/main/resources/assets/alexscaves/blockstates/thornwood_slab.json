@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=bottom,variant=default": {
+      "model": "alexscaves:thornwood_slab"
+    },
+    "half=top,variant=default": {
+      "model": "alexscaves:thornwood_slab_top"
+    }
+  }
+}

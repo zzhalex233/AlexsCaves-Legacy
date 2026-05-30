@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "open=true": [
+      { "model": "alexscaves:flytrap_open" },
+      { "model": "alexscaves:flytrap_open", "y": 90 }
+    ],
+    "open=false": [
+      { "model": "alexscaves:flytrap_closed" },
+      { "model": "alexscaves:flytrap_closed", "y": 90 }
+    ]
+  }
+}

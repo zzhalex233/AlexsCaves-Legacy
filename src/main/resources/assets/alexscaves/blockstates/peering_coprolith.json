@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "normal": [
+      {
+        "model": "alexscaves:peering_coprolith_0"
+      },
+      {
+        "model": "alexscaves:peering_coprolith_1"
+      }
+    ]
+  }
+}

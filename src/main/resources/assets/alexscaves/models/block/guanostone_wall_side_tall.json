@@ -1,0 +1,7 @@
+﻿{
+  "parent": "alexscaves:block/template_wall_side_tall",
+  "textures": {
+    "wall": "alexscaves:block/guanostone",
+    "top" : "alexscaves:block/guanostone"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "C C",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "concrete"
+    }
+  },
+  "result": {
+    "item": "alexscaves:cinder_brick",
+    "count": 16
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "G G",
+    "S S"
+  ],
+  "key": {
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "gelatin"
+    },
+    "S": {
+      "item": "alexscaves:sundrop"
+    }
+  },
+  "result": {
+    "item": "alexscaves:rainbounce_boots"
+  }
+}

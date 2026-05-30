@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "alexscaves:limestone_pillar",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "alexscaves:limestone_pillar"
+    },
+    "axis=z": {
+      "model": "alexscaves:limestone_pillar",
+      "x": 90
+    }
+  }
+}

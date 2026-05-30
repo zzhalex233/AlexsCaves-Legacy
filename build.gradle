@@ -235,6 +235,7 @@ compileTestJava {
 
 test {
     useJUnitPlatform()
+    classpath += sourceSets.main.compileClasspath
     javaLauncher.set(javaToolchains.launcherFor {
         languageVersion = JavaLanguageVersion.of(25)
     })

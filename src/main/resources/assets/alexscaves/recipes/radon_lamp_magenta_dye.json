@@ -1,0 +1,22 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "LLL",
+    "LDL",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "type": "forge:ore_dict",
+      "ore": "radonLamp"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "dyeMagenta"
+    }
+  },
+  "result": {
+    "item": "alexscaves:radon_lamp_magenta",
+    "count": 8
+  }
+}

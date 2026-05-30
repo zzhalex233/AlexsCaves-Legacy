@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=bottom,variant=default": {
+      "model": "alexscaves:smooth_limestone_slab"
+    },
+    "half=top,variant=default": {
+      "model": "alexscaves:smooth_limestone_slab_top"
+    }
+  }
+}

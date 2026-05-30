@@ -1,0 +1,14 @@
+{
+  "type": "forge:ore_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "thornwoodLog"
+    }
+  ],
+  "result": {
+    "item": "alexscaves:thornwood_planks",
+    "count": 4
+  }
+}

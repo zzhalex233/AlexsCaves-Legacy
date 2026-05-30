@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "CDC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "alexscaves:porous_coprolith"
+    },
+    "D": {
+      "item": "alexscaves:pure_darkness"
+    }
+  },
+  "result": {
+    "item": "alexscaves:peering_coprolith",
+    "count": 8
+  }
+}

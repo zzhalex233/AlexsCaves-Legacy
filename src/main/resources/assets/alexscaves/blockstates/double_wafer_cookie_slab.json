@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "variant=default": {
+      "model": "alexscaves:wafer_cookie_block"
+    }
+  }
+}
