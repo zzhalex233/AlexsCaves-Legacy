@@ -11,11 +11,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -49,8 +49,8 @@ public class BucketableWaterMobItem extends Item {
         }
 
         if (!world.isRemote) {
-            if (world.getBlockState(pos).getBlock() != getFluidBlock()) {
-                world.setBlockState(pos, getFluidBlock().getDefaultState(), 11);
+            if (!placeFluid(player, world, pos)) {
+                return new ActionResult<>(EnumActionResult.FAIL, stack);
             }
             BucketableWaterMob entity = entityFactory.apply(world);
             entity.setLocationAndAngles(pos.getX() + 0.5D, pos.getY() + 0.2D, pos.getZ() + 0.5D, player.rotationYaw, 0.0F);
@@ -59,9 +59,15 @@ public class BucketableWaterMobItem extends Item {
                 entity.setCustomNameTag(stack.getDisplayName());
             }
             world.spawnEntity(entity);
-            world.playSound(null, pos, getEmptySound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, player.capabilities.isCreativeMode ? stack : new ItemStack(Items.BUCKET));
+    }
+
+    protected boolean placeFluid(EntityPlayer player, World world, BlockPos pos) {
+        if (world.getBlockState(pos).getMaterial() == Material.WATER) {
+            return true;
+        }
+        return ((ItemBucket) Items.WATER_BUCKET).tryPlaceContainedLiquid(player, world, pos);
     }
 
     protected Block getFluidBlock() {

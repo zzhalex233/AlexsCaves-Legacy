@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.zzhalex233.alexscaves.AlexsCaves;
+import com.zzhalex233.alexscaves.server.entity.living.GossamerWormEntity;
 import com.zzhalex233.alexscaves.server.entity.living.LanternfishEntity;
 import com.zzhalex233.alexscaves.server.entity.living.SeaPigEntity;
 import com.zzhalex233.alexscaves.server.entity.living.TripodfishEntity;
@@ -77,12 +78,15 @@ public class ACItemRegistry {
     public static final ItemEntry PRIMORDIAL_HELMET = armor("primordial_helmet", CaveTab.PRIMORDIAL_CAVES, new PrimordialArmorItem(PRIMORDIAL_ARMOR_MATERIAL, EntityEquipmentSlot.HEAD));
     public static final ItemEntry PRIMORDIAL_TUNIC = armor("primordial_tunic", CaveTab.PRIMORDIAL_CAVES, new PrimordialArmorItem(PRIMORDIAL_ARMOR_MATERIAL, EntityEquipmentSlot.CHEST));
     public static final ItemEntry PRIMORDIAL_PANTS = armor("primordial_pants", CaveTab.PRIMORDIAL_CAVES, new PrimordialArmorItem(PRIMORDIAL_ARMOR_MATERIAL, EntityEquipmentSlot.LEGS));
+    public static final ItemEntry LIMESTONE_SPEAR = register("limestone_spear", CaveTab.PRIMORDIAL_CAVES, new LimestoneSpearItem(), null);
     public static final ItemEntry DINOSAUR_TRAIN = hiddenStackLimitedRarityItem("dinosaur_train", 1, net.minecraft.item.EnumRarity.UNCOMMON);
 
     public static final ItemEntry SULFUR_DUST = item("sulfur_dust", CaveTab.TOXIC_CAVES);
     public static final ItemEntry RADON_BOTTLE = stackLimitedItem("radon_bottle", CaveTab.TOXIC_CAVES, 16).withContainer(Items.GLASS_BOTTLE);
     public static final ItemEntry RADGILL = food("radgill", CaveTab.TOXIC_CAVES, Food.of(2, 0.2F).effect(new PotionEffect(ACEffectRegistry.IRRADIATED, 2000), 1.0F));
     public static final ItemEntry COOKED_RADGILL = food("cooked_radgill", CaveTab.TOXIC_CAVES, Food.of(5, 0.3F).effect(new PotionEffect(ACEffectRegistry.IRRADIATED, 1000), 0.1F));
+    public static final ItemEntry ACID_BUCKET = register("acid_bucket", CaveTab.TOXIC_CAVES, new AcidBucketItem(), null);
+    public static final ItemEntry RADGILL_BUCKET = register("radgill_bucket", CaveTab.TOXIC_CAVES, new RadgillBucketItem(), null);
     public static final ItemEntry URANIUM = radioactiveItem("uranium", CaveTab.TOXIC_CAVES, 0.001F, null);
     public static final ItemEntry URANIUM_SHARD = radioactiveItem("uranium_shard", CaveTab.TOXIC_CAVES, 0.001F, null);
     public static final ItemEntry SPELUNKIE = radiationRemovingFood("spelunkie", CaveTab.TOXIC_CAVES, Food.of(2, 0.1F).withFastEating());
@@ -105,6 +109,7 @@ public class ACItemRegistry {
     public static final ItemEntry COOKED_TRIPODFISH = food("cooked_tripodfish", CaveTab.ABYSSAL_CHASM, Food.of(5, 0.34F));
     public static final ItemEntry TRIPODFISH_BUCKET = register("tripodfish_bucket", CaveTab.ABYSSAL_CHASM, new BucketableWaterMobItem(TripodfishEntity::new), null);
     public static final ItemEntry SEA_PIG_BUCKET = register("sea_pig_bucket", CaveTab.ABYSSAL_CHASM, new BucketableWaterMobItem(SeaPigEntity::new), null);
+    public static final ItemEntry GOSSAMER_WORM_BUCKET = register("gossamer_worm_bucket", CaveTab.ABYSSAL_CHASM, new BucketableWaterMobItem(GossamerWormEntity::new), null);
     public static final ItemEntry SEA_PIG = food("sea_pig", CaveTab.ABYSSAL_CHASM, Food.of(1, 0.2F).effect(new PotionEffect(MobEffects.HUNGER, 1200), 0.7F));
     public static final ItemEntry MARINE_SNOW = register("marine_snow", CaveTab.ABYSSAL_CHASM, new MarineSnowItem(), null);
     public static final ItemEntry BIOLUMINESSCENCE = item("bioluminesscence", CaveTab.ABYSSAL_CHASM);
@@ -116,6 +121,7 @@ public class ACItemRegistry {
     public static final ItemEntry DIVING_CHESTPLATE = armor("diving_chestplate", CaveTab.ABYSSAL_CHASM, new DivingArmorItem(DIVING_SUIT_ARMOR_MATERIAL, EntityEquipmentSlot.CHEST));
     public static final ItemEntry DIVING_LEGGINGS = armor("diving_leggings", CaveTab.ABYSSAL_CHASM, new DivingArmorItem(DIVING_SUIT_ARMOR_MATERIAL, EntityEquipmentSlot.LEGS));
     public static final ItemEntry DIVING_BOOTS = armor("diving_boots", CaveTab.ABYSSAL_CHASM, new DivingArmorItem(DIVING_SUIT_ARMOR_MATERIAL, EntityEquipmentSlot.FEET));
+    public static final ItemEntry FLOATER = register("floater", CaveTab.ABYSSAL_CHASM, new FloaterItem(), null);
     public static final ItemEntry GUARDIAN_POTTERY_SHERD = item("guardian_pottery_sherd", CaveTab.ABYSSAL_CHASM);
     public static final ItemEntry HERO_POTTERY_SHERD = item("hero_pottery_sherd", CaveTab.ABYSSAL_CHASM);
     public static final ItemEntry GAME_CONTROLLER = hiddenRarityItem("game_controller", net.minecraft.item.EnumRarity.RARE);
@@ -126,6 +132,9 @@ public class ACItemRegistry {
     public static final ItemEntry CORRODENT_TEETH = item("corrodent_teeth", CaveTab.FORLORN_HOLLOWS);
     public static final ItemEntry VESPER_WING = food("vesper_wing", CaveTab.FORLORN_HOLLOWS, Food.of(3, 0.2F).effect(new PotionEffect(MobEffects.HUNGER, 1200), 1.0F));
     public static final ItemEntry VESPER_STEW = food("vesper_stew", CaveTab.FORLORN_HOLLOWS, Food.of(5, 0.3F).withAlwaysEdible().effect(new PotionEffect(MobEffects.NIGHT_VISION, 2400), 1.0F).withBowlRemainder());
+    public static final ItemEntry MOTH_DUST = register("moth_dust", CaveTab.FORLORN_HOLLOWS, new MothDustItem(), null);
+    public static final ItemEntry OCCULT_GEM = register("occult_gem", CaveTab.FORLORN_HOLLOWS, new OccultGemItem(), null);
+    public static final ItemEntry DESOLATE_DAGGER = register("desolate_dagger", CaveTab.FORLORN_HOLLOWS, new DesolateDaggerItem(), null);
     public static final ItemEntry PURE_DARKNESS = rarityItem("pure_darkness", CaveTab.FORLORN_HOLLOWS, RARITY_DEMONIC);
     public static final ItemEntry SHADOW_SILK = item("shadow_silk", CaveTab.FORLORN_HOLLOWS);
     public static final ItemEntry HOOD_OF_DARKNESS = armor("hood_of_darkness", CaveTab.FORLORN_HOLLOWS, new DarknessArmorItem(DARKNESS_ARMOR_MATERIAL, EntityEquipmentSlot.HEAD));
@@ -167,6 +176,7 @@ public class ACItemRegistry {
     public static final ItemEntry PURPLE_SODA_BOTTLE_ROCKET = register("purple_soda_bottle_rocket", CaveTab.CANDY_CAVITY, new SodaBottleRocketItem(), null);
     public static final ItemEntry FROSTMINT_SPEAR = register("frostmint_spear", CaveTab.CANDY_CAVITY, new FrostmintSpearItem(), null);
     public static final ItemEntry SWEET_TOOTH = rarityItem("sweet_tooth", CaveTab.CANDY_CAVITY, RARITY_SWEET);
+    public static final ItemEntry GUM_WORM_TOOTH = item("gum_worm_tooth", CaveTab.CANDY_CAVITY);
     public static final ItemEntry RADIANT_ESSENCE = rarityItem("radiant_essence", CaveTab.CANDY_CAVITY, RARITY_RAINBOW);
     public static final ItemEntry LICOWITCH_RADIANT_ESSENCE = hiddenRarityItem("licowitch_radiant_essence", RARITY_RAINBOW);
     public static final ItemEntry DISC_FRAGMENT_TASTY = item("disc_fragment_tasty", CaveTab.CANDY_CAVITY);

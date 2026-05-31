@@ -127,10 +127,13 @@ public class ACBlockRegistry {
     public static final BlockEntry SULFUR = rock("sulfur", CaveBlockTab.TOXIC_CAVES, 1.5F, 3.0F, SoundType.STONE);
     public static final BlockEntry RUSTY_SCRAP_METAL = metal("rusty_scrap_metal", CaveBlockTab.TOXIC_CAVES, 5.0F, 15.0F);
     public static final BlockEntry RUSTY_SCRAP_METAL_PLATE = metal("rusty_scrap_metal_plate", CaveBlockTab.TOXIC_CAVES, 5.0F, 15.0F);
+    public static final BlockEntry METAL_BARREL = register("metal_barrel", CaveBlockTab.TOXIC_CAVES, new MetalBarrelBlock());
+    public static final BlockEntry WASTE_DRUM = register("waste_drum", CaveBlockTab.TOXIC_CAVES, new WasteDrumBlock());
     public static final BlockEntry BLOCK_OF_URANIUM = register("block_of_uranium", CaveBlockTab.TOXIC_CAVES, new BasicCaveBlock(Material.IRON, 3.5F, 3.5F, SoundType.METAL).light(0.25F));
     public static final BlockEntry HAZMAT_BLOCK = hazmat("hazmat_block");
     public static final BlockEntry HAZMAT_WARNING_BLOCK = hazmat("hazmat_warning_block");
     public static final BlockEntry HAZMAT_SKULL_BLOCK = hazmat("hazmat_skull_block");
+    public static final BlockEntry ACID = fluid("acid", CaveBlockTab.TOXIC_CAVES, new AcidBlock());
     public static final BlockEntry RADON_LAMP_WHITE = lamp("radon_lamp_white", CaveBlockTab.TOXIC_CAVES);
     public static final BlockEntry RADON_LAMP_ORANGE = lamp("radon_lamp_orange", CaveBlockTab.TOXIC_CAVES);
     public static final BlockEntry RADON_LAMP_MAGENTA = lamp("radon_lamp_magenta", CaveBlockTab.TOXIC_CAVES);

@@ -36,7 +36,7 @@ public class PurpleSodaBucketItem extends Item {
         return new FluidHandlerItemStackSimple.SwapEmpty(stack, new ItemStack(Items.BUCKET), Fluid.BUCKET_VOLUME) {
             @Override
             public FluidStack getFluid() {
-                return container.getItem() == PurpleSodaBucketItem.this ? new FluidStack(ACFluidRegistry.PURPLE_SODA, Fluid.BUCKET_VOLUME) : null;
+                return container.getItem() == PurpleSodaBucketItem.this ? getContainedFluid() : null;
             }
 
             @Override
@@ -65,6 +65,10 @@ public class PurpleSodaBucketItem extends Item {
     }
 
     public boolean tryPlaceContainedLiquid(EntityPlayer player, World world, BlockPos pos) {
+        return tryPlaceContainedLiquid(player, world, pos, getFluidBlock(), getEmptySound());
+    }
+
+    public static boolean tryPlaceContainedLiquid(EntityPlayer player, World world, BlockPos pos, Block fluidBlock, net.minecraft.util.SoundEvent emptySound) {
         IBlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
         boolean replaceable = state.getMaterial().isReplaceable();
@@ -75,9 +79,25 @@ public class PurpleSodaBucketItem extends Item {
             if (replaceable && !state.getMaterial().isLiquid()) {
                 world.destroyBlock(pos, true);
             }
-            world.playSound(null, pos, ACSoundRegistry.PURPLE_SODA_UNSUBMERGE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            world.setBlockState(pos, ACBlockRegistry.PURPLE_SODA.block().getDefaultState(), 11);
+            world.playSound(null, pos, emptySound, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            world.setBlockState(pos, fluidBlock.getDefaultState(), 11);
         }
-        return block != ACBlockRegistry.PURPLE_SODA.block();
+        return block != fluidBlock;
+    }
+
+    protected Fluid getFluid() {
+        return ACFluidRegistry.PURPLE_SODA;
+    }
+
+    protected Block getFluidBlock() {
+        return ACBlockRegistry.PURPLE_SODA.block();
+    }
+
+    protected net.minecraft.util.SoundEvent getEmptySound() {
+        return ACSoundRegistry.PURPLE_SODA_UNSUBMERGE;
+    }
+
+    protected FluidStack getContainedFluid() {
+        return new FluidStack(getFluid(), Fluid.BUCKET_VOLUME);
     }
 }

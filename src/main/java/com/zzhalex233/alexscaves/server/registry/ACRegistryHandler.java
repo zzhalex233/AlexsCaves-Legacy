@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 import com.zzhalex233.alexscaves.AlexsCaves;
 import com.zzhalex233.alexscaves.server.block.ACBlockRegistry;
 import com.zzhalex233.alexscaves.server.block.fluid.ACFluidRegistry;
+import com.zzhalex233.alexscaves.server.block.entity.MetalBarrelTileEntity;
 import com.zzhalex233.alexscaves.server.block.entity.MusselTileEntity;
 import com.zzhalex233.alexscaves.server.entity.item.CinderBrickEntity;
 import com.zzhalex233.alexscaves.server.entity.item.GuanoEntity;
@@ -161,6 +162,8 @@ public class ACRegistryHandler {
     }
 
     public static void registerDispenserBehaviors() {
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.ACID_BUCKET.item(), DispenseFluidContainer.getInstance());
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.RADGILL_BUCKET.item(), DispenseFluidContainer.getInstance());
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.PURPLE_SODA_BUCKET.item(), DispenseFluidContainer.getInstance());
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.SEA_PIG_BUCKET.item(), DispenseFluidContainer.getInstance());
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.CINDER_BRICK.item(), new BehaviorProjectileDispense() {
@@ -189,6 +192,7 @@ public class ACRegistryHandler {
 
     public static void registerTileEntities() {
         TileEntity.register(AlexsCaves.MODID + ":mussel", MusselTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":metal_barrel", MetalBarrelTileEntity.class);
     }
 
     private static WoodLogOreDictionaryEntry woodLogOre(String oreName, ACBlockRegistry.BlockEntry block) {

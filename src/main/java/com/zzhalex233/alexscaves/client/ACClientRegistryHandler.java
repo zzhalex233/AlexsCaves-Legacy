@@ -35,6 +35,12 @@ public class ACClientRegistryHandler {
                 return new ModelResourceLocation(AlexsCaves.MODID + ":purple_soda", "fluid");
             }
         });
+        ModelLoader.setCustomStateMapper(ACBlockRegistry.ACID.block(), new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                return new ModelResourceLocation(AlexsCaves.MODID + ":acid", "fluid");
+            }
+        });
         for (ACItemRegistry.ItemEntry entry : ACItemRegistry.ITEMS) {
             Item item = entry.item();
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
@@ -48,6 +54,8 @@ public class ACClientRegistryHandler {
         event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "particle/sundrop"));
         event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "block/purple_soda_still"));
         event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "block/purple_soda_flowing"));
+        event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "block/acid_still"));
+        event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "block/acid_flowing"));
     }
 
     @SubscribeEvent

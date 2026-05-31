@@ -17,6 +17,15 @@ public class ACFluidRegistry {
             .setViscosity(1000)
             .setFillSound(ACSoundRegistry.PURPLE_SODA_SUBMERGE)
             .setEmptySound(ACSoundRegistry.PURPLE_SODA_UNSUBMERGE);
+    public static final Fluid ACID = new Fluid("acid",
+            new ResourceLocation(AlexsCaves.MODID, "block/acid_still"),
+            new ResourceLocation(AlexsCaves.MODID, "block/acid_flowing"))
+            .setUnlocalizedName(AlexsCaves.MODID + ".acid")
+            .setLuminosity(5)
+            .setDensity(1024)
+            .setViscosity(1024)
+            .setFillSound(ACSoundRegistry.ACID_SUBMERGE)
+            .setEmptySound(ACSoundRegistry.ACID_UNSUBMERGE);
 
     private static boolean fluidRegistered;
     private static boolean bucketRegistered;
@@ -30,7 +39,9 @@ public class ACFluidRegistry {
         if (bucketRegistered) {
             return;
         }
+        ACID.setBlock(ACBlockRegistry.ACID.block());
         PURPLE_SODA.setBlock(ACBlockRegistry.PURPLE_SODA.block());
+        FluidRegistry.addBucketForFluid(ACID);
         FluidRegistry.addBucketForFluid(PURPLE_SODA);
         bucketRegistered = true;
     }
@@ -39,6 +50,7 @@ public class ACFluidRegistry {
         if (fluidRegistered) {
             return;
         }
+        FluidRegistry.registerFluid(ACID);
         FluidRegistry.registerFluid(PURPLE_SODA);
         fluidRegistered = true;
     }

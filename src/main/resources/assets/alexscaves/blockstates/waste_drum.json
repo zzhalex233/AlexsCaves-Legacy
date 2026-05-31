@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "alexscaves:waste_drum",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "alexscaves:waste_drum",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "alexscaves:waste_drum",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "alexscaves:waste_drum",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "alexscaves:waste_drum"
+    },
+    "facing=west": {
+      "model": "alexscaves:waste_drum",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

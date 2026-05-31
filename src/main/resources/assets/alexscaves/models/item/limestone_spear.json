@@ -1,0 +1,11 @@
+{
+  "parent": "alexscaves:item/limestone_spear_inventory",
+  "overrides": [
+    {
+      "predicate": {
+        "throwing": 1
+      },
+      "model": "alexscaves:item/limestone_spear_throwing"
+    }
+  ]
+}

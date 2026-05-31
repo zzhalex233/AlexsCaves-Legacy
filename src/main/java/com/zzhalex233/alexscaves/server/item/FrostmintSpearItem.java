@@ -20,12 +20,14 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 public class FrostmintSpearItem extends Item {
     public FrostmintSpearItem() {
         setMaxStackSize(16);
+        addPropertyOverride(new ResourceLocation("throwing"), (stack, world, entity) -> entity != null && entity.getActiveItemStack() == stack ? 1.0F : 0.0F);
     }
 
     @Override
