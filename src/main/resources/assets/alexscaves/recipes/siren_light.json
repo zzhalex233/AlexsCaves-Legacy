@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "GRG",
+    "IEI"
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:redstone"
+    },
+    "R": {
+      "item": "alexscaves:radon_bottle"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "alexscaves:siren_light"
+  }
+}

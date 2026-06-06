@@ -1,0 +1,11 @@
+{
+  "parent": "alexscaves:item/extinction_spear_inventory",
+  "overrides": [
+    {
+      "predicate": {
+        "throwing": 1
+      },
+      "model": "alexscaves:item/extinction_spear_throwing"
+    }
+  ]
+}

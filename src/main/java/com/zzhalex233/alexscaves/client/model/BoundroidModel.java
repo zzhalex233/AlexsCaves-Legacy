@@ -50,4 +50,12 @@ public class BoundroidModel extends ModelBase {
         bump1.showModel = show;
         bump2.showModel = show;
     }
+
+    public void renderForQuarry(float ageInTicks, float slamAmount, float scale) {
+        showChains(true);
+        head.rotateAngleY = 0.0F;
+        head.rotateAngleX = MathHelper.sin(ageInTicks * 0.15F - 1.0F) * 0.2F * (1.0F - slamAmount) + slamAmount * 0.35F;
+        head.rotateAngleZ = MathHelper.sin(ageInTicks * 0.15F + 1.0F) * 0.2F * (1.0F - slamAmount);
+        head.render(scale);
+    }
 }

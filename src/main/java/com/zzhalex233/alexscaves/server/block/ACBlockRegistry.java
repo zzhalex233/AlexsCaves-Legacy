@@ -10,12 +10,20 @@ import com.zzhalex233.alexscaves.server.item.ACItemRegistry;
 import com.zzhalex233.alexscaves.server.item.EdibleBlockItem;
 import com.zzhalex233.alexscaves.server.item.EdibleSlabItem;
 import com.zzhalex233.alexscaves.server.item.GuanoLayerItem;
+import com.zzhalex233.alexscaves.server.item.CaveSignItem;
+import com.zzhalex233.alexscaves.server.item.MetalScaffoldingItem;
+import com.zzhalex233.alexscaves.server.item.SprinklesItem;
 import com.zzhalex233.alexscaves.server.potion.ACEffectRegistry;
+import com.zzhalex233.alexscaves.server.entity.living.GrottoceratopsEntity;
+import com.zzhalex233.alexscaves.server.entity.living.RelicheirusEntity;
+import com.zzhalex233.alexscaves.server.entity.living.SubterranodonEntity;
+import com.zzhalex233.alexscaves.server.entity.living.VallumraptorEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemDoor;
@@ -37,9 +45,33 @@ public class ACBlockRegistry {
     public static final BlockEntry GALENA_BRICK_STAIRS = stairs("galena_brick_stairs", CaveBlockTab.MAGNETIC_CAVES, GALENA_BRICKS);
     public static final BlockEntry GALENA_BRICK_SLAB = slab("galena_brick_slab", CaveBlockTab.MAGNETIC_CAVES, Material.ROCK, 3.5F, 10.0F, SoundType.STONE);
     public static final BlockEntry GALENA_BRICK_WALL = wall("galena_brick_wall", CaveBlockTab.MAGNETIC_CAVES, 3.5F, 10.0F, SoundType.STONE);
+    public static final BlockEntry SPELUNKERY_TABLE = register("spelunkery_table", CaveBlockTab.MAGNETIC_CAVES, new SpelunkeryTableBlock());
     public static final BlockEntry GALENA_PILLAR = register("galena_pillar", CaveBlockTab.MAGNETIC_CAVES, new GalenaPillarBlock());
+    public static final BlockEntry GALENA_SPIRE = register("galena_spire", CaveBlockTab.MAGNETIC_CAVES, new GalenaSpireBlock());
+    public static final BlockEntry AMBER = register("amber", CaveBlockTab.PRIMORDIAL_CAVES, new AmberBlock());
+    public static final BlockEntry AMBERSOL = register("ambersol", CaveBlockTab.PRIMORDIAL_CAVES, new AmbersolBlock());
+    public static final BlockEntry AMBERSOL_LIGHT = blockOnly("ambersol_light", CaveBlockTab.PRIMORDIAL_CAVES, new AmbersolLightBlock());
+    public static final BlockEntry AMBER_MONOLITH = register("amber_monolith", CaveBlockTab.PRIMORDIAL_CAVES, new AmberMonolithBlock());
+    public static final BlockEntry ENERGIZED_GALENA_NEUTRAL = energizedGalena("energized_galena_neutral");
+    public static final BlockEntry ENERGIZED_GALENA_SCARLET = energizedGalena("energized_galena_scarlet");
+    public static final BlockEntry ENERGIZED_GALENA_AZURE = energizedGalena("energized_galena_azure");
     public static final BlockEntry GALENA_IRON_ORE = rock("galena_iron_ore", CaveBlockTab.MAGNETIC_CAVES, 3.0F, 5.0F, SoundType.STONE);
     public static final BlockEntry METAL_SWARF = falling("metal_swarf", CaveBlockTab.MAGNETIC_CAVES, 0.6F, 0.6F, SoundType.METAL);
+    public static final BlockEntry METAL_REBAR = register("metal_rebar", CaveBlockTab.MAGNETIC_CAVES, new RebarBlock());
+    public static final BlockEntry METAL_SCAFFOLDING = scaffolding("metal_scaffolding", CaveBlockTab.MAGNETIC_CAVES);
+    public static final BlockEntry MAGNETIC_ACTIVATOR = register("magnetic_activator", CaveBlockTab.MAGNETIC_CAVES, new MagneticActivatorBlock());
+    public static final BlockEntry MAGNETIC_LIGHT = register("magnetic_light", CaveBlockTab.MAGNETIC_CAVES, new MagneticLightBlock());
+    public static final BlockEntry MAGNETIC_LEVITATION_RAIL = register("magnetic_levitation_rail", CaveBlockTab.MAGNETIC_CAVES, new MagneticLevitationRailBlock());
+    public static final BlockEntry SCARLET_MAGNET = register("scarlet_magnet", CaveBlockTab.MAGNETIC_CAVES, new MagnetBlock(false));
+    public static final BlockEntry AZURE_MAGNET = register("azure_magnet", CaveBlockTab.MAGNETIC_CAVES, new MagnetBlock(true));
+    public static final BlockEntry HOLOGRAM_PROJECTOR = register("hologram_projector", CaveBlockTab.MAGNETIC_CAVES, new HologramProjectorBlock());
+    public static final BlockEntry TESLA_BULB = register("tesla_bulb", CaveBlockTab.MAGNETIC_CAVES, new TeslaBulbBlock());
+    public static final BlockEntry SCARLET_NEODYMIUM_NODE = register("scarlet_neodymium_node", CaveBlockTab.MAGNETIC_CAVES, new NeodymiumNodeBlock(false));
+    public static final BlockEntry AZURE_NEODYMIUM_NODE = register("azure_neodymium_node", CaveBlockTab.MAGNETIC_CAVES, new NeodymiumNodeBlock(true));
+    public static final BlockEntry SCARLET_NEODYMIUM_PILLAR = register("scarlet_neodymium_pillar", CaveBlockTab.MAGNETIC_CAVES, new NeodymiumPillarBlock(false));
+    public static final BlockEntry AZURE_NEODYMIUM_PILLAR = register("azure_neodymium_pillar", CaveBlockTab.MAGNETIC_CAVES, new NeodymiumPillarBlock(true));
+    public static final BlockEntry HEART_OF_IRON = register("heart_of_iron", CaveBlockTab.MAGNETIC_CAVES, new HeartOfIronBlock());
+    public static final BlockEntry QUARRY = register("quarry", CaveBlockTab.MAGNETIC_CAVES, new QuarryBlock());
     public static final BlockEntry SCRAP_METAL = metal("scrap_metal", CaveBlockTab.MAGNETIC_CAVES, 5.0F, 15.0F);
     public static final BlockEntry SCRAP_METAL_PLATE = metal("scrap_metal_plate", CaveBlockTab.MAGNETIC_CAVES, 5.0F, 15.0F);
     public static final BlockEntry BLOCK_OF_SCARLET_NEODYMIUM = metal("block_of_scarlet_neodymium", CaveBlockTab.MAGNETIC_CAVES, 5.0F, 6.0F);
@@ -89,7 +121,9 @@ public class ACBlockRegistry {
     public static final BlockEntry STRIPPED_PEWEN_LOG = woodPillar("stripped_pewen_log", CaveBlockTab.PRIMORDIAL_CAVES, 2.0F, 2.0F);
     public static final BlockEntry STRIPPED_PEWEN_WOOD = woodPillar("stripped_pewen_wood", CaveBlockTab.PRIMORDIAL_CAVES, 2.0F, 2.0F);
     public static final BlockEntry PEWEN_PLANKS = wood("pewen_planks", CaveBlockTab.PRIMORDIAL_CAVES, 2.0F, 3.0F);
+    public static final BlockEntry PEWEN_BRANCH = register("pewen_branch", CaveBlockTab.PRIMORDIAL_CAVES, new PewenBranchBlock());
     public static final BlockEntry PEWEN_PINES = register("pewen_pines", CaveBlockTab.PRIMORDIAL_CAVES, new PewenPinesBlock());
+    public static final BlockEntry POTTED_PEWEN_PINES = blockOnly("potted_pewen_pines", CaveBlockTab.PRIMORDIAL_CAVES, new PottedCavePlantBlock(PEWEN_PINES.block()));
     public static final BlockEntry PEWEN_STAIRS = stairs("pewen_stairs", CaveBlockTab.PRIMORDIAL_CAVES, PEWEN_PLANKS);
     public static final BlockEntry PEWEN_SLAB = slab("pewen_slab", CaveBlockTab.PRIMORDIAL_CAVES, Material.WOOD, 2.0F, 3.0F, SoundType.WOOD);
     public static final BlockEntry PEWEN_FENCE = fence("pewen_fence", CaveBlockTab.PRIMORDIAL_CAVES, 2.0F, 3.0F);
@@ -98,16 +132,25 @@ public class ACBlockRegistry {
     public static final BlockEntry PEWEN_BUTTON = button("pewen_button", CaveBlockTab.PRIMORDIAL_CAVES);
     public static final BlockEntry PEWEN_FENCE_GATE = fenceGate("pewen_fence_gate", CaveBlockTab.PRIMORDIAL_CAVES);
     public static final BlockEntry PEWEN_DOOR = door("pewen_door", CaveBlockTab.PRIMORDIAL_CAVES);
+    public static final BlockEntry PEWEN_SIGN = sign("pewen_sign", "pewen", CaveBlockTab.PRIMORDIAL_CAVES);
     public static final BlockEntry FERN_THATCH = plantLike("fern_thatch", CaveBlockTab.PRIMORDIAL_CAVES, 0.5F, 0.5F);
     public static final BlockEntry CYCAD = register("cycad", CaveBlockTab.PRIMORDIAL_CAVES, new CycadBlock());
+    public static final BlockEntry POTTED_CYCAD = blockOnly("potted_cycad", CaveBlockTab.PRIMORDIAL_CAVES, new PottedCavePlantBlock(CYCAD.block()));
     public static final BlockEntry FIDDLEHEAD = register("fiddlehead", CaveBlockTab.PRIMORDIAL_CAVES, new FiddleheadBlock());
+    public static final BlockEntry POTTED_FIDDLEHEAD = blockOnly("potted_fiddlehead", CaveBlockTab.PRIMORDIAL_CAVES, new PottedCavePlantBlock(FIDDLEHEAD.block()));
     public static final BlockEntry CURLY_FERN = register("curly_fern", CaveBlockTab.PRIMORDIAL_CAVES, new CurlyFernBlock());
+    public static final BlockEntry POTTED_CURLY_FERN = blockOnly("potted_curly_fern", CaveBlockTab.PRIMORDIAL_CAVES, new PottedCavePlantBlock(CURLY_FERN.block()));
     public static final BlockEntry FLYTRAP = register("flytrap", CaveBlockTab.PRIMORDIAL_CAVES, new FlytrapBlock());
+    public static final BlockEntry POTTED_FLYTRAP = blockOnly("potted_flytrap", CaveBlockTab.PRIMORDIAL_CAVES, new PottedFlytrapBlock(FLYTRAP.block()));
     public static final BlockEntry TREE_STAR = register("tree_star", CaveBlockTab.PRIMORDIAL_CAVES, new TreeStarBlock());
     public static final BlockEntry THIN_BONE = register("thin_bone", CaveBlockTab.PRIMORDIAL_CAVES, new ThinBoneBlock());
     public static final BlockEntry BONE_RIBS = register("bone_ribs", CaveBlockTab.PRIMORDIAL_CAVES, new BoneRibsBlock());
     public static final BlockEntry DINOSAUR_CHOP = edibleRegister("dinosaur_chop", CaveBlockTab.PRIMORDIAL_CAVES, new DinosaurChopBlock(3, 0.2F), ACItemRegistry.Food.of(3, 0.2F).withMeat());
     public static final BlockEntry COOKED_DINOSAUR_CHOP = edibleRegister("cooked_dinosaur_chop", CaveBlockTab.PRIMORDIAL_CAVES, new DinosaurChopBlock(7, 0.35F), ACItemRegistry.Food.of(7, 0.35F).withMeat());
+    public static final BlockEntry SUBTERRANODON_EGG = register("subterranodon_egg", CaveBlockTab.PRIMORDIAL_CAVES, new MultipleDinosaurEggsBlock(SubterranodonEntity.class, 4));
+    public static final BlockEntry VALLUMRAPTOR_EGG = register("vallumraptor_egg", CaveBlockTab.PRIMORDIAL_CAVES, new MultipleDinosaurEggsBlock(VallumraptorEntity.class, 4));
+    public static final BlockEntry GROTTOCERATOPS_EGG = register("grottoceratops_egg", CaveBlockTab.PRIMORDIAL_CAVES, new DinosaurEggBlock(GrottoceratopsEntity.class, 10, 12));
+    public static final BlockEntry RELICHEIRUS_EGG = register("relicheirus_egg", CaveBlockTab.PRIMORDIAL_CAVES, new DinosaurEggBlock(RelicheirusEntity.class, 14, 16));
     public static final BlockEntry FLOOD_BASALT = pillar("flood_basalt", CaveBlockTab.PRIMORDIAL_CAVES, 3.0F, 100.0F, SoundType.STONE);
     public static final BlockEntry RADROCK = rock("radrock", CaveBlockTab.TOXIC_CAVES, 4.0F, 11.0F, SoundType.STONE);
     public static final BlockEntry RADROCK_STAIRS = stairs("radrock_stairs", CaveBlockTab.TOXIC_CAVES, RADROCK);
@@ -118,22 +161,36 @@ public class ACBlockRegistry {
     public static final BlockEntry RADROCK_BRICK_SLAB = slab("radrock_brick_slab", CaveBlockTab.TOXIC_CAVES, Material.ROCK, 4.0F, 11.0F, SoundType.STONE);
     public static final BlockEntry RADROCK_BRICK_WALL = wall("radrock_brick_wall", CaveBlockTab.TOXIC_CAVES, 4.0F, 11.0F, SoundType.STONE);
     public static final BlockEntry RADROCK_CHISELED = rock("radrock_chiseled", CaveBlockTab.TOXIC_CAVES, 4.0F, 11.0F, SoundType.STONE);
+    public static final BlockEntry ACIDIC_RADROCK = register("acidic_radrock", CaveBlockTab.TOXIC_CAVES, new AcidicRadrockBlock());
     public static final BlockEntry RADROCK_URANIUM_ORE = ore("radrock_uranium_ore", CaveBlockTab.TOXIC_CAVES, 5.0F, 11.0F, SoundType.STONE, ACItemRegistry.URANIUM.item(), 1, 1, 0, 1);
     public static final BlockEntry CINDER_BLOCK = rock("cinder_block", CaveBlockTab.TOXIC_CAVES, 5.0F, 20.0F, ACSoundTypes.CINDER_BLOCK);
     public static final BlockEntry CINDER_BLOCK_STAIRS = stairs("cinder_block_stairs", CaveBlockTab.TOXIC_CAVES, CINDER_BLOCK);
     public static final BlockEntry CINDER_BLOCK_SLAB = slab("cinder_block_slab", CaveBlockTab.TOXIC_CAVES, Material.ROCK, 5.0F, 20.0F, ACSoundTypes.CINDER_BLOCK);
     public static final BlockEntry CINDER_BLOCK_WALL = wall("cinder_block_wall", CaveBlockTab.TOXIC_CAVES, 5.0F, 20.0F, ACSoundTypes.CINDER_BLOCK);
     public static final BlockEntry UNREFINED_WASTE = register("unrefined_waste", CaveBlockTab.TOXIC_CAVES, new UnrefinedWasteBlock());
-    public static final BlockEntry SULFUR = rock("sulfur", CaveBlockTab.TOXIC_CAVES, 1.5F, 3.0F, SoundType.STONE);
+    public static final BlockEntry SULFUR = register("sulfur", CaveBlockTab.TOXIC_CAVES, new SulfurBlock().sound(ACSoundTypes.SULFUR));
+    public static final BlockEntry SULFUR_BUD_SMALL = register("sulfur_bud_small", CaveBlockTab.TOXIC_CAVES, new SulfurBudBlock(6, 4, 1, 1).sound(ACSoundTypes.SULFUR));
+    public static final BlockEntry SULFUR_BUD_MEDIUM = register("sulfur_bud_medium", CaveBlockTab.TOXIC_CAVES, new SulfurBudBlock(6, 8, 1, 1).sound(ACSoundTypes.SULFUR));
+    public static final BlockEntry SULFUR_BUD_LARGE = register("sulfur_bud_large", CaveBlockTab.TOXIC_CAVES, new SulfurBudBlock(6, 12, 1, 1).sound(ACSoundTypes.SULFUR));
+    public static final BlockEntry SULFUR_CLUSTER = register("sulfur_cluster", CaveBlockTab.TOXIC_CAVES, new SulfurBudBlock(6, 14, 2, 5).sound(ACSoundTypes.SULFUR));
     public static final BlockEntry RUSTY_SCRAP_METAL = metal("rusty_scrap_metal", CaveBlockTab.TOXIC_CAVES, 5.0F, 15.0F);
     public static final BlockEntry RUSTY_SCRAP_METAL_PLATE = metal("rusty_scrap_metal_plate", CaveBlockTab.TOXIC_CAVES, 5.0F, 15.0F);
+    public static final BlockEntry RUSTY_REBAR = register("rusty_rebar", CaveBlockTab.TOXIC_CAVES, new RebarBlock());
+    public static final BlockEntry RUSTY_SCAFFOLDING = scaffolding("rusty_scaffolding", CaveBlockTab.TOXIC_CAVES);
     public static final BlockEntry METAL_BARREL = register("metal_barrel", CaveBlockTab.TOXIC_CAVES, new MetalBarrelBlock());
     public static final BlockEntry WASTE_DRUM = register("waste_drum", CaveBlockTab.TOXIC_CAVES, new WasteDrumBlock());
+    public static final BlockEntry URANIUM_ROD = register("uranium_rod", CaveBlockTab.TOXIC_CAVES, new UraniumRodBlock());
+    public static final BlockEntry NUCLEAR_FURNACE_COMPONENT = register("nuclear_furnace_component", CaveBlockTab.TOXIC_CAVES, new NuclearFurnaceComponentBlock());
+    public static final BlockEntry NUCLEAR_FURNACE = blockOnly("nuclear_furnace", CaveBlockTab.TOXIC_CAVES, new NuclearFurnaceBlock());
+    public static final BlockEntry NUCLEAR_SIREN = register("nuclear_siren", CaveBlockTab.TOXIC_CAVES, new NuclearSirenBlock());
+    public static final BlockEntry SIREN_LIGHT = register("siren_light", CaveBlockTab.TOXIC_CAVES, new SirenLightBlock());
     public static final BlockEntry BLOCK_OF_URANIUM = register("block_of_uranium", CaveBlockTab.TOXIC_CAVES, new BasicCaveBlock(Material.IRON, 3.5F, 3.5F, SoundType.METAL).light(0.25F));
     public static final BlockEntry HAZMAT_BLOCK = hazmat("hazmat_block");
     public static final BlockEntry HAZMAT_WARNING_BLOCK = hazmat("hazmat_warning_block");
     public static final BlockEntry HAZMAT_SKULL_BLOCK = hazmat("hazmat_skull_block");
     public static final BlockEntry ACID = fluid("acid", CaveBlockTab.TOXIC_CAVES, new AcidBlock());
+    public static final BlockEntry UNDERWEED = register("underweed", CaveBlockTab.TOXIC_CAVES, new CavePlantBlock(false));
+    public static final BlockEntry POTTED_UNDERWEED = blockOnly("potted_underweed", CaveBlockTab.TOXIC_CAVES, new PottedCavePlantBlock(UNDERWEED.block()));
     public static final BlockEntry RADON_LAMP_WHITE = lamp("radon_lamp_white", CaveBlockTab.TOXIC_CAVES);
     public static final BlockEntry RADON_LAMP_ORANGE = lamp("radon_lamp_orange", CaveBlockTab.TOXIC_CAVES);
     public static final BlockEntry RADON_LAMP_MAGENTA = lamp("radon_lamp_magenta", CaveBlockTab.TOXIC_CAVES);
@@ -171,6 +228,7 @@ public class ACBlockRegistry {
     public static final BlockEntry SMOOTH_BONE_SLAB = slab("smooth_bone_slab", CaveBlockTab.ABYSSAL_CHASM, Material.ROCK, 2.0F, 2.0F, SoundType.STONE);
     public static final BlockEntry SMOOTH_BONE_WALL = wall("smooth_bone_wall", CaveBlockTab.ABYSSAL_CHASM, 2.0F, 2.0F, SoundType.STONE);
     public static final BlockEntry MUSSEL = register("mussel", CaveBlockTab.ABYSSAL_CHASM, new MusselBlock());
+    public static final BlockEntry BIOLUMINESCENT_TORCH = register("bioluminescent_torch", CaveBlockTab.ABYSSAL_CHASM, new BioluminescentTorchBlock());
     public static final BlockEntry GUANOSTONE_BRICKS = rock("guanostone_bricks", CaveBlockTab.ABYSSAL_CHASM, 1.3F, 2.0F, SoundType.STONE);
     public static final BlockEntry GUANOSTONE_BRICK_STAIRS = stairs("guanostone_brick_stairs", CaveBlockTab.ABYSSAL_CHASM, GUANOSTONE_BRICKS);
     public static final BlockEntry GUANOSTONE_BRICK_SLAB = slab("guanostone_brick_slab", CaveBlockTab.ABYSSAL_CHASM, Material.ROCK, 1.3F, 2.0F, SoundType.STONE);
@@ -178,6 +236,7 @@ public class ACBlockRegistry {
     public static final BlockEntry GUANOSTONE_CHISELED = rock("guanostone_chiseled", CaveBlockTab.ABYSSAL_CHASM, 1.3F, 2.0F, SoundType.STONE);
     public static final BlockEntry GUANOSTONE_TILES = rock("guanostone_tiles", CaveBlockTab.ABYSSAL_CHASM, 1.3F, 2.0F, SoundType.STONE);
     public static final BlockEntry GUANOSTONE_REDSTONE_ORE = ore("guanostone_redstone_ore", CaveBlockTab.ABYSSAL_CHASM, 3.0F, 5.0F, SoundType.STONE, net.minecraft.init.Items.REDSTONE, 4, 5, 1, 5);
+    public static final BlockEntry ABYSSAL_ALTAR = register("abyssal_altar", CaveBlockTab.ABYSSAL_CHASM, new AbyssalAltarBlock());
     public static final BlockEntry GUANO_BLOCK = register("guano_block", CaveBlockTab.FORLORN_HOLLOWS, new GuanoBlock());
     public static final BlockEntry GUANO_LAYER = guanoLayer("guano_layer");
     public static final BlockEntry COPROLITH = rock("coprolith", CaveBlockTab.FORLORN_HOLLOWS, 1.75F, 4.0F, SoundType.STONE);
@@ -204,7 +263,9 @@ public class ACBlockRegistry {
     public static final BlockEntry THORNWOOD_BUTTON = button("thornwood_button", CaveBlockTab.FORLORN_HOLLOWS);
     public static final BlockEntry THORNWOOD_FENCE_GATE = fenceGate("thornwood_fence_gate", CaveBlockTab.FORLORN_HOLLOWS);
     public static final BlockEntry THORNWOOD_DOOR = door("thornwood_door", CaveBlockTab.FORLORN_HOLLOWS);
+    public static final BlockEntry THORNWOOD_SIGN = sign("thornwood_sign", "thornwood", CaveBlockTab.FORLORN_HOLLOWS);
     public static final BlockEntry THORNWOOD_BRANCH = register("thornwood_branch", CaveBlockTab.FORLORN_HOLLOWS, new ThornwoodBranchBlock());
+    public static final BlockEntry POTTED_THORNWOOD_BRANCH = blockOnly("potted_thornwood_branch", CaveBlockTab.FORLORN_HOLLOWS, new PottedCavePlantBlock(THORNWOOD_BRANCH.block()));
     public static final BlockEntry BLOCK_OF_CHOCOLATE = edibleRegister("block_of_chocolate", CaveBlockTab.CANDY_CAVITY, new ChocolateBlock(1.0F, 2.0F, ACSoundTypes.DENSE_CANDY), candyFood(2, 0.1F, 0.01F));
     public static final BlockEntry BLOCK_OF_POLISHED_CHOCOLATE = edible("block_of_polished_chocolate", CaveBlockTab.CANDY_CAVITY, 1.0F, 2.0F, ACSoundTypes.DENSE_CANDY, candyFood(2, 0.1F, 0.01F));
     public static final BlockEntry BLOCK_OF_CHISELED_CHOCOLATE = edible("block_of_chiseled_chocolate", CaveBlockTab.CANDY_CAVITY, 1.0F, 2.0F, ACSoundTypes.DENSE_CANDY, candyFood(2, 0.1F, 0.01F));
@@ -237,18 +298,42 @@ public class ACBlockRegistry {
     public static final BlockEntry ROCK_CANDY_BLACK = rockCandy("rock_candy_black");
     public static final BlockEntry PURPLE_SODA = fluid("purple_soda", CaveBlockTab.CANDY_CAVITY, new PurpleSodaBlock());
     public static final BlockEntry CANDY_CANE = edibleRegister("candy_cane", CaveBlockTab.CANDY_CAVITY, new SmallCandyCaneBlock(), candyFood(2, 0.1F, 0.01F));
+    public static final BlockEntry STRIPPED_CANDY_CANE_BLOCK = edibleRegister("stripped_candy_cane_block", CaveBlockTab.CANDY_CAVITY, CandyCaneBlock.stripped(), candyFood(2, 0.1F, 0.01F));
+    public static final BlockEntry CANDY_CANE_BLOCK = edibleRegister("candy_cane_block", CaveBlockTab.CANDY_CAVITY, new CandyCaneBlock(STRIPPED_CANDY_CANE_BLOCK.block()), candyFood(2, 0.1F, 0.01F));
+    public static final BlockEntry CHISELED_CANDY_CANE_BLOCK = edibleRegister("chiseled_candy_cane_block", CaveBlockTab.CANDY_CAVITY, new CandyCaneBlock(STRIPPED_CANDY_CANE_BLOCK.block()), candyFood(2, 0.1F, 0.01F));
+    public static final BlockEntry STRIPPED_CANDY_CANE_POLE = edibleRegister("stripped_candy_cane_pole", CaveBlockTab.CANDY_CAVITY, CandyCanePoleBlock.stripped(), candyFood(1, 0.05F, 0.01F));
+    public static final BlockEntry CANDY_CANE_POLE = edibleRegister("candy_cane_pole", CaveBlockTab.CANDY_CAVITY, new CandyCanePoleBlock(STRIPPED_CANDY_CANE_POLE.block()), candyFood(1, 0.05F, 0.01F));
+    public static final BlockEntry LOLLIPOP_BUNCH = edibleRegister("lollipop_bunch", CaveBlockTab.CANDY_CAVITY, new CavePlantBlock(true), candyFood(1, 0.1F, 0.01F));
+    public static final BlockEntry SMALL_PEPPERMINT = edibleRegister("small_peppermint", CaveBlockTab.CANDY_CAVITY, new PeppermintBlock(2.0D, 6.0D), candyFood(3, 0.15F, 0.01F));
+    public static final BlockEntry LARGE_PEPPERMINT = edibleRegister("large_peppermint", CaveBlockTab.CANDY_CAVITY, new PeppermintBlock(0.0D, 8.0D), candyFood(5, 0.15F, 0.01F));
+    public static final BlockEntry VANILLA_ICE_CREAM = edibleRegister("vanilla_ice_cream", CaveBlockTab.CANDY_CAVITY, new IceCreamBlock(), candyFood(4, 0.2F, 0.03F));
+    public static final BlockEntry CHOCOLATE_ICE_CREAM = edibleRegister("chocolate_ice_cream", CaveBlockTab.CANDY_CAVITY, new IceCreamBlock(), candyFood(4, 0.2F, 0.03F));
+    public static final BlockEntry SWEETBERRY_ICE_CREAM = edibleRegister("sweetberry_ice_cream", CaveBlockTab.CANDY_CAVITY, new IceCreamBlock(), candyFood(4, 0.2F, 0.03F));
+    public static final BlockEntry SPRINKLES = sprinkles("sprinkles", CaveBlockTab.CANDY_CAVITY);
     public static final BlockEntry FROSTMINT = frostmint("frostmint");
+    public static final BlockEntry SUGAR_GLASS = edibleRegister("sugar_glass", CaveBlockTab.CANDY_CAVITY, new SugarGlassBlock(), candyFood(1, 0.1F, 0.01F));
+    public static final BlockEntry LICOROOT = ediblePillar("licoroot", CaveBlockTab.CANDY_CAVITY, 1.0F, 1.5F, SoundType.WOOD, licorootFood(3));
+    public static final BlockEntry LICOROOT_VINE = edibleRegister("licoroot_vine", CaveBlockTab.CANDY_CAVITY, new LicorootVineBlock(), licorootFood(1));
+    public static final BlockEntry LICOROOT_SPROUT = edibleRegister("licoroot_sprout", CaveBlockTab.CANDY_CAVITY, new LicorootSproutBlock(), licorootFood(1));
+    public static final BlockEntry GUMMY_RING_RED = edibleRegister("gummy_ring_red", CaveBlockTab.CANDY_CAVITY, new GummyRingBlock(), candyFood(3, 0.15F, 0.01F));
+    public static final BlockEntry GUMMY_RING_GREEN = edibleRegister("gummy_ring_green", CaveBlockTab.CANDY_CAVITY, new GummyRingBlock(), candyFood(3, 0.15F, 0.01F));
+    public static final BlockEntry GUMMY_RING_YELLOW = edibleRegister("gummy_ring_yellow", CaveBlockTab.CANDY_CAVITY, new GummyRingBlock(), candyFood(3, 0.15F, 0.01F));
+    public static final BlockEntry GUMMY_RING_BLUE = edibleRegister("gummy_ring_blue", CaveBlockTab.CANDY_CAVITY, new GummyRingBlock(), candyFood(3, 0.15F, 0.01F));
+    public static final BlockEntry GUMMY_RING_PINK = edibleRegister("gummy_ring_pink", CaveBlockTab.CANDY_CAVITY, new GummyRingBlock(), candyFood(3, 0.15F, 0.01F));
     public static final BlockEntry SUNDROP = edibleRegister("sundrop", CaveBlockTab.CANDY_CAVITY, new SundropBlock(), candyFood(5, 0.2F, 0.05F));
+    public static final BlockEntry CONVERSION_CRUCIBLE = register("conversion_crucible", CaveBlockTab.CANDY_CAVITY, new ConversionCrucibleBlock());
     public static final BlockEntry GIANT_SWEETBERRY = edibleRegister("giant_sweetberry", CaveBlockTab.CANDY_CAVITY, new GiantSweetberryBlock(), ACItemRegistry.Food.of(5, 0.2F));
-    public static final BlockEntry SWEET_PUFF = edibleRegister("sweet_puff", CaveBlockTab.CANDY_CAVITY, new CavePlantBlock(false), candyFood(1, 0.1F, 0.02F));
+    public static final BlockEntry SWEET_PUFF = edibleRegister("sweet_puff", CaveBlockTab.CANDY_CAVITY, new CavePlantBlock(true), candyFood(1, 0.1F, 0.02F));
     public static final BlockEntry GINGERBREAD_BLOCK = edible("gingerbread_block", CaveBlockTab.CANDY_CAVITY, 1.0F, 1.5F, ACSoundTypes.DENSE_CANDY, candyFood(4, 0.1F, 0.01F));
     public static final BlockEntry GINGERBREAD_STAIRS = edibleStairs("gingerbread_stairs", CaveBlockTab.CANDY_CAVITY, GINGERBREAD_BLOCK, candyFood(2, 0.1F, 0.01F));
     public static final BlockEntry GINGERBREAD_SLAB = edibleSlab("gingerbread_slab", CaveBlockTab.CANDY_CAVITY, Material.CAKE, 1.0F, 1.5F, ACSoundTypes.DENSE_CANDY, candyFood(2, 0.1F, 0.01F));
     public static final BlockEntry GINGERBREAD_WALL = edibleWall("gingerbread_wall", CaveBlockTab.CANDY_CAVITY, 1.0F, 1.5F, ACSoundTypes.DENSE_CANDY, candyFood(2, 0.1F, 0.01F));
+    public static final BlockEntry GINGERBREAD_DOOR = edibleRegister("gingerbread_door", CaveBlockTab.CANDY_CAVITY, new GingerbreadDoorBlock(), candyFood(2, 0.1F, 0.01F));
     public static final BlockEntry FROSTED_GINGERBREAD_BLOCK = edible("frosted_gingerbread_block", CaveBlockTab.CANDY_CAVITY, 1.0F, 1.5F, ACSoundTypes.DENSE_CANDY, candyFood(4, 0.1F, 0.01F));
     public static final BlockEntry FROSTED_GINGERBREAD_STAIRS = edibleStairs("frosted_gingerbread_stairs", CaveBlockTab.CANDY_CAVITY, FROSTED_GINGERBREAD_BLOCK, candyFood(2, 0.1F, 0.01F));
     public static final BlockEntry FROSTED_GINGERBREAD_SLAB = edibleSlab("frosted_gingerbread_slab", CaveBlockTab.CANDY_CAVITY, Material.CAKE, 1.0F, 1.5F, ACSoundTypes.DENSE_CANDY, candyFood(2, 0.1F, 0.01F));
     public static final BlockEntry FROSTED_GINGERBREAD_WALL = edibleWall("frosted_gingerbread_wall", CaveBlockTab.CANDY_CAVITY, 1.0F, 1.5F, ACSoundTypes.DENSE_CANDY, candyFood(2, 0.1F, 0.01F));
+    public static final BlockEntry FROSTED_GINGERBREAD_DOOR = edibleRegister("frosted_gingerbread_door", CaveBlockTab.CANDY_CAVITY, new GingerbreadDoorBlock(), candyFood(2, 0.1F, 0.01F));
     public static final BlockEntry GINGERBREAD_BRICKS = edible("gingerbread_bricks", CaveBlockTab.CANDY_CAVITY, 1.0F, 1.5F, ACSoundTypes.DENSE_CANDY, candyFood(4, 0.1F, 0.01F));
     public static final BlockEntry GINGERBREAD_BRICK_STAIRS = edibleStairs("gingerbread_brick_stairs", CaveBlockTab.CANDY_CAVITY, GINGERBREAD_BRICKS, candyFood(2, 0.1F, 0.01F));
     public static final BlockEntry GINGERBREAD_BRICK_SLAB = edibleSlab("gingerbread_brick_slab", CaveBlockTab.CANDY_CAVITY, Material.CAKE, 1.0F, 1.5F, ACSoundTypes.DENSE_CANDY, candyFood(2, 0.1F, 0.01F));
@@ -303,6 +388,10 @@ public class ACBlockRegistry {
         return ACItemRegistry.Food.of(healAmount, saturation).effect(new PotionEffect(ACEffectRegistry.SUGAR_RUSH, 200), effectChance);
     }
 
+    private static ACItemRegistry.Food licorootFood(int healAmount) {
+        return ACItemRegistry.Food.of(healAmount, 0.1F).effect(new PotionEffect(MobEffects.NAUSEA, 200), 0.1F);
+    }
+
     private static BlockEntry plantLike(String name, CaveBlockTab tab, float hardness, float resistance) {
         return register(name, tab, new BasicCaveBlock(Material.PLANTS, hardness, resistance, SoundType.PLANT));
     }
@@ -321,6 +410,10 @@ public class ACBlockRegistry {
 
     private static BlockEntry glowingPillar(String name, CaveBlockTab tab, float hardness, float resistance, SoundType sound, float light) {
         return register(name, tab, new BasicPillarBlock(Material.ROCK, hardness, resistance, sound).light(light));
+    }
+
+    private static BlockEntry energizedGalena(String name) {
+        return register(name, CaveBlockTab.MAGNETIC_CAVES, new BasicPillarBlock(Material.ROCK, 3.0F, 10.0F, SoundType.STONE).light(0.3125F));
     }
 
     private static BlockEntry falling(String name, CaveBlockTab tab, float hardness, float resistance, SoundType sound) {
@@ -405,6 +498,25 @@ public class ACBlockRegistry {
         return entry;
     }
 
+    private static BlockEntry sign(String name, String woodName, CaveBlockTab tab) {
+        ResourceLocation id = new ResourceLocation(AlexsCaves.MODID, name);
+        CaveStandingSignBlock standing = new CaveStandingSignBlock(woodName);
+        CaveWallSignBlock wall = new CaveWallSignBlock(woodName);
+        standing.setRegistryName(id);
+        standing.setTranslationKey(AlexsCaves.MODID + "." + name);
+        standing.setCreativeTab(tab.creativeTab());
+        wall.setRegistryName(new ResourceLocation(AlexsCaves.MODID, woodName + "_wall_sign"));
+        wall.setTranslationKey(AlexsCaves.MODID + "." + name);
+        wall.setCreativeTab(null);
+        Item item = new CaveSignItem(standing, wall).setRegistryName(id);
+        item.setTranslationKey(AlexsCaves.MODID + "." + name);
+        item.setCreativeTab(tab.creativeTab());
+        BlockEntry entry = new BlockEntry(name, tab, standing, item);
+        MUTABLE_BLOCKS.add(entry);
+        MUTABLE_AUXILIARY_BLOCKS.add(wall);
+        return entry;
+    }
+
     private static BlockEntry slab(String name, CaveBlockTab tab, Material material, float hardness, float resistance, SoundType sound) {
         ResourceLocation id = new ResourceLocation(AlexsCaves.MODID, name);
         BasicSlabBlock.Half half = new BasicSlabBlock.Half(material, hardness, resistance, sound);
@@ -479,12 +591,50 @@ public class ACBlockRegistry {
         return entry;
     }
 
+    private static BlockEntry sprinkles(String name, CaveBlockTab tab) {
+        ResourceLocation id = new ResourceLocation(AlexsCaves.MODID, name);
+        Block block = new SprinklesBlock();
+        block.setRegistryName(id);
+        block.setTranslationKey(AlexsCaves.MODID + "." + name);
+        block.setCreativeTab(tab.creativeTab());
+        Item item = new SprinklesItem(block, candyFood(1, 0.1F, 0.01F)).setRegistryName(id);
+        item.setTranslationKey(AlexsCaves.MODID + "." + name);
+        item.setCreativeTab(tab.creativeTab());
+        BlockEntry entry = new BlockEntry(name, tab, block, item);
+        MUTABLE_BLOCKS.add(entry);
+        return entry;
+    }
+
     private static BlockEntry register(String name, CaveBlockTab tab, Block block) {
         ResourceLocation id = new ResourceLocation(AlexsCaves.MODID, name);
         block.setRegistryName(id);
         block.setTranslationKey(AlexsCaves.MODID + "." + name);
         block.setCreativeTab(tab.creativeTab());
         ItemBlock item = (ItemBlock) new ItemBlock(block).setRegistryName(id);
+        item.setTranslationKey(AlexsCaves.MODID + "." + name);
+        item.setCreativeTab(tab.creativeTab());
+        BlockEntry entry = new BlockEntry(name, tab, block, item);
+        MUTABLE_BLOCKS.add(entry);
+        return entry;
+    }
+
+    private static BlockEntry blockOnly(String name, CaveBlockTab tab, Block block) {
+        ResourceLocation id = new ResourceLocation(AlexsCaves.MODID, name);
+        block.setRegistryName(id);
+        block.setTranslationKey(AlexsCaves.MODID + "." + name);
+        block.setCreativeTab(null);
+        BlockEntry entry = new BlockEntry(name, tab, block, null);
+        MUTABLE_BLOCKS.add(entry);
+        return entry;
+    }
+
+    private static BlockEntry scaffolding(String name, CaveBlockTab tab) {
+        ResourceLocation id = new ResourceLocation(AlexsCaves.MODID, name);
+        Block block = new MetalScaffoldingBlock();
+        block.setRegistryName(id);
+        block.setTranslationKey(AlexsCaves.MODID + "." + name);
+        block.setCreativeTab(tab.creativeTab());
+        ItemBlock item = (ItemBlock) new MetalScaffoldingItem(block).setRegistryName(id);
         item.setTranslationKey(AlexsCaves.MODID + "." + name);
         item.setCreativeTab(tab.creativeTab());
         BlockEntry entry = new BlockEntry(name, tab, block, item);
@@ -561,5 +711,9 @@ public class ACBlockRegistry {
         public boolean hasItem() {
             return item != null;
         }
+    }
+
+    public static Item signItemFor(String woodName) {
+        return "thornwood".equals(woodName) ? THORNWOOD_SIGN.item() : PEWEN_SIGN.item();
     }
 }

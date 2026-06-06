@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "down=false": {
+      "model": "alexscaves:tesla_bulb"
+    },
+    "down=true": {
+      "model": "alexscaves:tesla_bulb"
+    }
+  }
+}

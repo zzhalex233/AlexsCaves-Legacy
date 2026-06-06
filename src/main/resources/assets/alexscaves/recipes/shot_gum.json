@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SPP",
+    "III",
+    "IN "
+  ],
+  "key": {
+    "S": {
+      "item": "alexscaves:sugar_glass"
+    },
+    "P": {
+      "item": "alexscaves:gumball_pile"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "N": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetIron"
+    }
+  },
+  "result": {
+    "item": "alexscaves:shot_gum"
+  }
+}

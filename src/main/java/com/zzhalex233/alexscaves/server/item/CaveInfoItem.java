@@ -103,6 +103,16 @@ public class CaveInfoItem extends Item {
         return stack.hasTagCompound() ? stack.getTagCompound().getString("CaveBiome") : null;
     }
 
+    public static String caveBiomeAt(World world, net.minecraft.util.math.BlockPos pos) {
+        String biomeName = world.getBiome(pos).getRegistryName() == null ? "" : world.getBiome(pos).getRegistryName().toString();
+        for (String caveBiome : CAVE_BIOMES) {
+            if (biomeName.equals(caveBiome) || biomeName.endsWith(caveBiome.substring(caveBiome.indexOf(':') + 1))) {
+                return caveBiome;
+            }
+        }
+        return CAVE_BIOMES[Math.abs((pos.getX() >> 6) + (pos.getZ() >> 6)) % CAVE_BIOMES.length];
+    }
+
     private static String biomeTranslationKey(String caveBiome) {
         return "biome." + caveBiome.replace(':', '.');
     }

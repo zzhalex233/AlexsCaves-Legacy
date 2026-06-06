@@ -87,4 +87,8 @@ public class FlyParticle extends Particle {
         double z = pos.getZ() + 0.5D + rand.nextFloat() - 0.5D;
         Minecraft.getMinecraft().effectRenderer.addEffect(new FlyParticle(world, x, y, z, x, y, z));
     }
+
+    public static void spawn(World world, double x, double y, double z) {
+        Minecraft.getMinecraft().effectRenderer.addEffect(new FlyParticle(world, x, y, z, x, y, z));
+    }
 }

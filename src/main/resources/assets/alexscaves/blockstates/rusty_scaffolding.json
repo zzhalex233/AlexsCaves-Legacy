@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "bottom=false,distance=0": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=1": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=2": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=3": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=4": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=5": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=6": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=7": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=8": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=9": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=10": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=11": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=false,distance=12": { "model": "alexscaves:rusty_scaffolding" },
+    "bottom=true,distance=0": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=1": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=2": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=3": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=4": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=5": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=6": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=7": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=8": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=9": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=10": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=11": { "model": "alexscaves:rusty_scaffolding_bottom" },
+    "bottom=true,distance=12": { "model": "alexscaves:rusty_scaffolding_bottom" }
+  }
+}

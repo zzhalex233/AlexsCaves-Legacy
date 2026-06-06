@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "alexscaves:abyssal_altar"
+    },
+    "active=true": {
+      "model": "alexscaves:abyssal_altar_active"
+    }
+  }
+}

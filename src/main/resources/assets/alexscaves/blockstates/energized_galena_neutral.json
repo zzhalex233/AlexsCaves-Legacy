@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=y": { "model": "alexscaves:energized_galena_neutral" },
+    "axis=z": { "model": "alexscaves:energized_galena_neutral", "x": 90 },
+    "axis=x": { "model": "alexscaves:energized_galena_neutral", "x": 90, "y": 90 }
+  }
+}

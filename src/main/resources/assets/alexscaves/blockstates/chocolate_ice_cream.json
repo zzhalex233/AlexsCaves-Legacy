@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "type=0": [
+      {
+        "model": "alexscaves:chocolate_ice_cream"
+      }
+    ],
+    "type=1": [
+      {
+        "model": "alexscaves:chocolate_ice_cream_bottom"
+      }
+    ],
+    "type=2": [
+      {
+        "model": "alexscaves:chocolate_ice_cream_dripping"
+      }
+    ]
+  }
+}

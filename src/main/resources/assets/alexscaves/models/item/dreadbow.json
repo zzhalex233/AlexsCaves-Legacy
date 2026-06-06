@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:item/bow",
+  "textures": {
+    "layer0": "alexscaves:item/dreadbow"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "pulling": 1
+      },
+      "model": "alexscaves:item/dreadbow_pulling_0_inventory"
+    },
+    {
+      "predicate": {
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "alexscaves:item/dreadbow_pulling_1_inventory"
+    },
+    {
+      "predicate": {
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "alexscaves:item/dreadbow_pulling_2_inventory"
+    }
+  ]
+}

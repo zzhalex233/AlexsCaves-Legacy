@@ -4,6 +4,9 @@ import com.zzhalex233.alexscaves.AlexsCaves;
 import com.zzhalex233.alexscaves.server.block.ACBlockRegistry;
 import com.zzhalex233.alexscaves.server.block.FrostedChocolateBlock;
 import com.zzhalex233.alexscaves.server.item.ACItemRegistry;
+import com.zzhalex233.alexscaves.server.item.BiomeTreatItem;
+import com.zzhalex233.alexscaves.server.item.GazingPearlItem;
+import com.zzhalex233.alexscaves.server.item.JellyBeanItem;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
@@ -52,6 +55,9 @@ public class ACClientRegistryHandler {
         event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "particle/fly_0"));
         event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "particle/fly_1"));
         event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "particle/sundrop"));
+        event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "particle/trail"));
+        event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "particle/trail_mirrored"));
+        event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "particle/sonar"));
         event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "block/purple_soda_still"));
         event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "block/purple_soda_flowing"));
         event.getMap().registerSprite(new ResourceLocation(AlexsCaves.MODID, "block/acid_still"));
@@ -68,5 +74,11 @@ public class ACClientRegistryHandler {
     public static void registerItemColors(ColorHandlerEvent.Item event) {
         event.getItemColors().registerItemColorHandler((stack, tintIndex) -> tintIndex == 0 ? FrostedChocolateBlock.calculateFrostingColor(null) : 0xFFFFFF,
             ACBlockRegistry.BLOCK_OF_FROSTED_CHOCOLATE.item(), ACBlockRegistry.BLOCK_OF_FROSTING.item());
+        event.getItemColors().registerItemColorHandler((stack, tintIndex) -> tintIndex == 0 ? JellyBeanItem.getBeanColor(stack) : 0xFFFFFF,
+            ACItemRegistry.JELLY_BEAN.item());
+        event.getItemColors().registerItemColorHandler((stack, tintIndex) -> tintIndex == 0 ? GazingPearlItem.getPearlColor(stack) : 0xFFFFFF,
+            ACItemRegistry.GAZING_PEARL.item());
+        event.getItemColors().registerItemColorHandler((stack, tintIndex) -> tintIndex == 1 ? BiomeTreatItem.getBiomeTreatColor(stack) : 0xFFFFFF,
+            ACItemRegistry.BIOME_TREAT.item());
     }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "alexscaves:block/licoroot/licoroot_sprout"
+  }
+}

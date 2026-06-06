@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "alexscaves:item/candy_cane_hook"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "cast": 1
+      },
+      "model": "alexscaves:item/candy_cane_hook_active"
+    }
+  ]
+}

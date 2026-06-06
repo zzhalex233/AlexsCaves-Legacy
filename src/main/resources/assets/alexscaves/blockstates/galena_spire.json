@@ -1,0 +1,32 @@
+{
+  "variants": {
+    "down=false,shape=0": {
+      "model": "alexscaves:galena_spire_0"
+    },
+    "down=false,shape=1": {
+      "model": "alexscaves:galena_spire_1"
+    },
+    "down=false,shape=2": {
+      "model": "alexscaves:galena_spire_2"
+    },
+    "down=false,shape=3": {
+      "model": "alexscaves:galena_spire_3"
+    },
+    "down=true,shape=0": {
+      "model": "alexscaves:galena_spire_0",
+      "x": 180
+    },
+    "down=true,shape=1": {
+      "model": "alexscaves:galena_spire_1",
+      "x": 180
+    },
+    "down=true,shape=2": {
+      "model": "alexscaves:galena_spire_2",
+      "x": 180
+    },
+    "down=true,shape=3": {
+      "model": "alexscaves:galena_spire_3",
+      "x": 180
+    }
+  }
+}

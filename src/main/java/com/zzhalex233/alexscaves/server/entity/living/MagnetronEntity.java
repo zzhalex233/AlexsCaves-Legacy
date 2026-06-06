@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zzhalex233.alexscaves.server.block.ACBlockRegistry;
+import com.zzhalex233.alexscaves.server.block.HeartOfIronBlock;
 import com.zzhalex233.alexscaves.server.entity.util.MagnetronJoint;
 import com.zzhalex233.alexscaves.server.misc.ACSoundRegistry;
 
@@ -12,6 +13,7 @@ import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -54,6 +56,7 @@ public class MagnetronEntity extends EntityMob {
     private AttackPose prevAttackPose = AttackPose.NONE;
     private boolean hasFormedAttributes;
     private int movingSoundTimer;
+    private boolean droppedHeart;
 
     public MagnetronEntity(World world) {
         super(world);
@@ -193,9 +196,16 @@ public class MagnetronEntity extends EntityMob {
         }
         int index = 0;
         for (MagnetronJoint joint : MagnetronJoint.values()) {
-            spawnOrUpdatePart(index++, joint, false, ACBlockRegistry.SCRAP_METAL.block().getDefaultState());
-            spawnOrUpdatePart(index++, joint, true, ACBlockRegistry.SCRAP_METAL_PLATE.block().getDefaultState());
+            spawnOrUpdatePart(index, joint, false, partStateOrDefault(index, ACBlockRegistry.SCRAP_METAL.block().getDefaultState()));
+            index++;
+            spawnOrUpdatePart(index, joint, true, partStateOrDefault(index, ACBlockRegistry.SCRAP_METAL_PLATE.block().getDefaultState()));
+            index++;
         }
+    }
+
+    private IBlockState partStateOrDefault(int index, IBlockState fallback) {
+        Entity entity = partIds[index] == -1 ? null : world.getEntityByID(partIds[index]);
+        return entity instanceof MagnetronPartEntity && !entity.isDead ? ((MagnetronPartEntity) entity).getBlockState() : fallback;
     }
 
     private void spawnOrUpdatePart(int index, MagnetronJoint joint, boolean left, IBlockState state) {
@@ -228,6 +238,7 @@ public class MagnetronEntity extends EntityMob {
     public void onDeath(DamageSource cause) {
         super.onDeath(cause);
         if (!world.isRemote) {
+            dropBodyBlocks(cause);
             removeParts();
         }
     }
@@ -251,6 +262,39 @@ public class MagnetronEntity extends EntityMob {
 
     @Override
     public void fall(float distance, float damageMultiplier) {
+    }
+
+    private void dropBodyBlocks(DamageSource cause) {
+        if (!shouldDropBlocks(cause)) {
+            return;
+        }
+        if (isFormed() && world.getGameRules().getBoolean("mobGriefing")) {
+            for (MagnetronPartEntity part : getPartsArray()) {
+                IBlockState state = part.getBlockState();
+                if (state != null && state.getBlock() != Blocks.AIR) {
+                    spawnFallingBlock(firstOpenBlockAt(new BlockPos(part)), state);
+                }
+            }
+        }
+        if (!droppedHeart) {
+            droppedHeart = true;
+            spawnFallingBlock(new BlockPos(this), ACBlockRegistry.HEART_OF_IRON.block().getDefaultState().withProperty(HeartOfIronBlock.AXIS, getHorizontalFacing().getAxis()));
+        }
+    }
+
+    private boolean shouldDropBlocks(DamageSource cause) {
+        return cause != null && (cause.getTrueSource() != null || cause.getImmediateSource() != null || recentlyHit > 0);
+    }
+
+    private BlockPos firstOpenBlockAt(BlockPos pos) {
+        while (!world.isAirBlock(pos) && pos.getY() < 255) {
+            pos = pos.up();
+        }
+        return pos;
+    }
+
+    private void spawnFallingBlock(BlockPos pos, IBlockState state) {
+        world.spawnEntity(new EntityFallingBlock(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state));
     }
 
     @Override

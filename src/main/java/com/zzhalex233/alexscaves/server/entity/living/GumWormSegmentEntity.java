@@ -1,8 +1,13 @@
 package com.zzhalex233.alexscaves.server.entity.living;
 
-import com.zzhalex233.alexscaves.server.entity.ACEntityRegistry;
+import com.zzhalex233.alexscaves.AlexsCaves;
+import com.zzhalex233.alexscaves.server.entity.util.KeybindUsingMount;
+import com.zzhalex233.alexscaves.server.item.CandyCaneHookItem;
+import com.zzhalex233.alexscaves.server.message.MountedEntityKeyMessage;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -12,7 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class GumWormSegmentEntity extends Entity {
+public class GumWormSegmentEntity extends Entity implements KeybindUsingMount {
     private static final DataParameter<Integer> HEAD_ID = EntityDataManager.createKey(GumWormSegmentEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> FRONT_ID = EntityDataManager.createKey(GumWormSegmentEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> BACK_ID = EntityDataManager.createKey(GumWormSegmentEntity.class, DataSerializers.VARINT);
@@ -20,6 +25,8 @@ public class GumWormSegmentEntity extends Entity {
     private float prevZRot;
     private float zRot;
     private int zRotTickOffset;
+    private int jumpKeyCooldown;
+    private boolean wasJumpKeyDown;
 
     public GumWormSegmentEntity(World world) {
         super(world);
@@ -38,6 +45,7 @@ public class GumWormSegmentEntity extends Entity {
 
     public static void createWormSegmentsFor(GumWormEntity gumWorm, int count) {
         GumWormSegmentEntity prev = null;
+        GumWormSegmentEntity ridingSegment = null;
         for (int i = 0; i < count; i++) {
             GumWormSegmentEntity current = new GumWormSegmentEntity(gumWorm.world);
             current.setHeadId(gumWorm.getEntityId());
@@ -49,6 +57,15 @@ public class GumWormSegmentEntity extends Entity {
                 prev.setBackId(current.getEntityId());
             }
             prev = current;
+            if (i == 3) {
+                ridingSegment = current;
+            }
+        }
+        if (ridingSegment == null) {
+            ridingSegment = prev;
+        }
+        if (ridingSegment != null) {
+            gumWorm.setRidingSegmentId(ridingSegment.getEntityId());
         }
     }
 
@@ -64,6 +81,9 @@ public class GumWormSegmentEntity extends Entity {
             if (ticksExisted > 5 && (head == null || head.isDead || front == null || front.isDead)) {
                 setDead();
                 return;
+            }
+            if (isBeingRidden() && head instanceof GumWormEntity && !((GumWormEntity) head).hasARidingHook() && !getPassengers().isEmpty()) {
+                getPassengers().get(0).dismountRidingEntity();
             }
             if (front != null) {
                 Vec3d ideal = getIdealPosition(front, head);
@@ -85,6 +105,24 @@ public class GumWormSegmentEntity extends Entity {
         }
         if (back != null && back.isDead) {
             setBackId(-1);
+        }
+        if (world.isRemote) {
+            EntityPlayer player = AlexsCaves.PROXY.getClientSidePlayer();
+            if (player != null && player.getRidingEntity() == this) {
+                if (AlexsCaves.PROXY.isKeyDown(1)) {
+                    AlexsCaves.NETWORK_WRAPPER.sendToServer(new MountedEntityKeyMessage(getEntityId(), player.getEntityId(), 0));
+                    postDismount(player);
+                }
+                boolean jumpKeyDown = AlexsCaves.PROXY.isKeyDown(0);
+                if (jumpKeyDown && !wasJumpKeyDown && jumpKeyCooldown <= 0) {
+                    AlexsCaves.NETWORK_WRAPPER.sendToServer(new MountedEntityKeyMessage(getEntityId(), player.getEntityId(), 1));
+                    jumpKeyCooldown = 5;
+                }
+                wasJumpKeyDown = jumpKeyDown;
+            }
+        }
+        if (jumpKeyCooldown > 0) {
+            jumpKeyCooldown--;
         }
     }
 
@@ -117,6 +155,35 @@ public class GumWormSegmentEntity extends Entity {
     @Override
     public boolean canBePushed() {
         return false;
+    }
+
+    @Override
+    public void updatePassenger(Entity passenger) {
+        super.updatePassenger(passenger);
+        if (isPassenger(passenger)) {
+            Entity head = getHeadEntity();
+            if (head instanceof GumWormEntity && passenger instanceof EntityPlayer) {
+                ((GumWormEntity) head).tickController((EntityPlayer) passenger);
+            }
+            Vec3d riderPosition = getRiderPosition(passenger);
+            passenger.setPosition(riderPosition.x, riderPosition.y, riderPosition.z);
+            passenger.fallDistance = 0.0F;
+        }
+    }
+
+    @Override
+    public boolean shouldRiderSit() {
+        return false;
+    }
+
+    @Override
+    public void onKeyPacket(Entity keyPresser, int type) {
+        if (type == 0) {
+            keyPresser.dismountRidingEntity();
+            postDismount(keyPresser);
+        } else if (type == 1 && getHeadEntity() instanceof GumWormEntity) {
+            ((GumWormEntity) getHeadEntity()).onPlayerJump(20);
+        }
     }
 
     @Override
@@ -181,6 +248,25 @@ public class GumWormSegmentEntity extends Entity {
 
     public float getBodyZRot(float partialTicks) {
         return prevZRot + (zRot - prevZRot) * partialTicks;
+    }
+
+    public Vec3d getRiderPosition(Entity rider) {
+        Vec3d offset = new Vec3d(0.0D, height + 0.25D + rider.getYOffset(), 0.15D).rotatePitch(-rotationPitch * 0.017453292F).rotateYaw(-rotationYaw * 0.017453292F);
+        return getPositionVector().add(offset);
+    }
+
+    private void postDismount(Entity rider) {
+        if (rider instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) rider;
+            ItemStack main = player.getHeldItemMainhand();
+            ItemStack off = player.getHeldItemOffhand();
+            if (main.getItem() instanceof CandyCaneHookItem) {
+                CandyCaneHookItem.setReelingIn(main, true);
+            }
+            if (off.getItem() instanceof CandyCaneHookItem) {
+                CandyCaneHookItem.setReelingIn(off, true);
+            }
+        }
     }
 
     private float approachAngle(float value, float target, float step) {

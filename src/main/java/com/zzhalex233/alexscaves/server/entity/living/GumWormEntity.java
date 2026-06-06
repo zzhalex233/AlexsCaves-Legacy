@@ -2,6 +2,7 @@ package com.zzhalex233.alexscaves.server.entity.living;
 
 import javax.annotation.Nullable;
 
+import com.zzhalex233.alexscaves.server.entity.item.CandyCaneHookEntity;
 import com.zzhalex233.alexscaves.server.item.ACItemRegistry;
 import com.zzhalex233.alexscaves.server.misc.ACSoundRegistry;
 
@@ -16,7 +17,6 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -37,6 +37,9 @@ public class GumWormEntity extends EntityMob {
     private static final DataParameter<Boolean> BITING = EntityDataManager.createKey(GumWormEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> DIGGING = EntityDataManager.createKey(GumWormEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> TARGET_DIG_PITCH = EntityDataManager.createKey(GumWormEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Integer> RIDING_SEGMENT_ID = EntityDataManager.createKey(GumWormEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> LEFT_HOOK_ID = EntityDataManager.createKey(GumWormEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> RIGHT_HOOK_ID = EntityDataManager.createKey(GumWormEntity.class, DataSerializers.VARINT);
     private float prevZRot;
     private float zRot;
     private float prevMouthOpenProgress;
@@ -49,6 +52,11 @@ public class GumWormEntity extends EntityMob {
     private int attackNoiseCooldown;
     private int stopDiggingNoiseCooldown;
     private boolean wasDiggingLastTick;
+    private int ridingModeTicks;
+    private int riderLeapTime;
+    private int maxRiderLeapTime = 1;
+    private float riderLeapRot;
+    private EntityPlayer ridingPlayer;
 
     public GumWormEntity(World world) {
         super(world);
@@ -65,6 +73,9 @@ public class GumWormEntity extends EntityMob {
         dataManager.register(BITING, false);
         dataManager.register(DIGGING, false);
         dataManager.register(TARGET_DIG_PITCH, 0.0F);
+        dataManager.register(RIDING_SEGMENT_ID, -1);
+        dataManager.register(LEFT_HOOK_ID, -1);
+        dataManager.register(RIGHT_HOOK_ID, -1);
     }
 
     @Override
@@ -117,6 +128,15 @@ public class GumWormEntity extends EntityMob {
         }
         if (!world.isRemote && ticksExisted % 40 == 0) {
             ensureSegments();
+        }
+        if (!world.isRemote) {
+            tickHookState();
+            if (isRidingMode()) {
+                tickRidingControl();
+            }
+            if (ridingModeTicks > 0) {
+                ridingModeTicks--;
+            }
         }
     }
 
@@ -175,6 +195,9 @@ public class GumWormEntity extends EntityMob {
         if (source == DamageSource.IN_WALL || source == DamageSource.FALL || source == DamageSource.DROWN) {
             return false;
         }
+        if (source.getTrueSource() != null && isRidingPlayer(source.getTrueSource())) {
+            return false;
+        }
         return super.attackEntityFrom(source, amount);
     }
 
@@ -211,13 +234,19 @@ public class GumWormEntity extends EntityMob {
 
     private void ensureSegments() {
         int segments = 0;
+        GumWormSegmentEntity ridingSegment = null;
         for (GumWormSegmentEntity segment : world.getEntitiesWithinAABB(GumWormSegmentEntity.class, getEntityBoundingBox().grow(80.0D))) {
             if (segment.getHeadEntity() == this) {
                 segments++;
+                if (segment.getIndex() == 3 || ridingSegment == null) {
+                    ridingSegment = segment;
+                }
             }
         }
         if (segments == 0) {
             GumWormSegmentEntity.createWormSegmentsFor(this, 15 + rand.nextInt(5));
+        } else if (ridingSegment != null) {
+            setRidingSegmentId(ridingSegment.getEntityId());
         }
     }
 
@@ -335,6 +364,106 @@ public class GumWormEntity extends EntityMob {
         return prevDigPitch + (digPitch - prevDigPitch) * partialTicks;
     }
 
+    public Vec3d getHookPosition(int side) {
+        Vec3d offset = new Vec3d(side * -1.0D, -0.5D, -1.15D).rotatePitch(-getViewXRot(1.0F) * 0.017453292F).rotateYaw(-renderYawOffset * 0.017453292F);
+        return getPositionVector().add(0.0D, 0.5D * width, 0.0D).add(offset);
+    }
+
+    public void onMounted() {
+        BlockPos pos = new BlockPos(posX, posY - 1.0D, posZ);
+        while (pos.getY() < world.getHeight() && !world.getBlockState(pos).getBlock().isAir(world.getBlockState(pos), world, pos) && world.getBlockState(pos).getBlock() != Blocks.BEDROCK) {
+            pos = pos.up();
+        }
+        setPosition(posX, pos.getY(), posZ);
+    }
+
+    public Entity getRidingSegment() {
+        int id = dataManager.get(RIDING_SEGMENT_ID);
+        return id == -1 ? null : world.getEntityByID(id);
+    }
+
+    public void setRidingSegmentId(int id) {
+        dataManager.set(RIDING_SEGMENT_ID, id);
+    }
+
+    public void setHookId(boolean left, int id) {
+        dataManager.set(left ? LEFT_HOOK_ID : RIGHT_HOOK_ID, id);
+    }
+
+    public Entity getHook(boolean left) {
+        int id = dataManager.get(left ? LEFT_HOOK_ID : RIGHT_HOOK_ID);
+        Entity entity = id == -1 ? null : world.getEntityByID(id);
+        return entity != null && entity.isEntityAlive() ? entity : null;
+    }
+
+    public boolean hasARidingHook() {
+        return getHook(true) != null || getHook(false) != null;
+    }
+
+    public boolean isRidingMode() {
+        return ridingModeTicks > 0;
+    }
+
+    public boolean isRidingPlayer(Entity player) {
+        Entity leftOwner = getHook(true) instanceof CandyCaneHookEntity ? ((CandyCaneHookEntity) getHook(true)).getOwner() : null;
+        Entity rightOwner = getHook(false) instanceof CandyCaneHookEntity ? ((CandyCaneHookEntity) getHook(false)).getOwner() : null;
+        return leftOwner == player && rightOwner == player;
+    }
+
+    public void tickController(EntityPlayer passenger) {
+        ridingPlayer = passenger;
+        if (hasARidingHook()) {
+            ridingModeTicks = 10;
+        }
+    }
+
+    public void onPlayerJump(int time) {
+        int leapFor = (int) Math.ceil(time * 0.2F) + 10;
+        riderLeapTime = leapFor;
+        maxRiderLeapTime = Math.max(1, leapFor);
+    }
+
+    private void tickHookState() {
+        if (getHook(true) == null && dataManager.get(LEFT_HOOK_ID) != -1) {
+            dataManager.set(LEFT_HOOK_ID, -1);
+        }
+        if (getHook(false) == null && dataManager.get(RIGHT_HOOK_ID) != -1) {
+            dataManager.set(RIGHT_HOOK_ID, -1);
+        }
+    }
+
+    private void tickRidingControl() {
+        if (!(ridingPlayer != null && ridingPlayer.getRidingEntity() instanceof GumWormSegmentEntity && ((GumWormSegmentEntity) ridingPlayer.getRidingEntity()).getHeadEntity() == this)) {
+            return;
+        }
+        getNavigator().clearPath();
+        setAttackTarget(null);
+        boolean validRider = isRidingPlayer(ridingPlayer);
+        if (riderLeapTime > 0 && validRider) {
+            float f = Math.max(1.0F, maxRiderLeapTime);
+            float progress = 1.0F - riderLeapTime / f;
+            Vec3d leap = new Vec3d(0.0D, Math.sin(progress * Math.PI * 1.5D) * 2.0D, 2.0D).rotateYaw(-riderLeapRot * 0.017453292F);
+            setLeaping(true);
+            setDigging(false);
+            motionX = leap.x;
+            motionY = leap.y;
+            motionZ = leap.z;
+            rotationYaw = riderLeapRot;
+            renderYawOffset = rotationYaw;
+            riderLeapTime--;
+        } else {
+            setLeaping(false);
+            Vec3d target = new Vec3d(validRider ? ridingPlayer.moveStrafing * 2.5D : 0.0D, 0.0D, 10.0D).rotateYaw(-renderYawOffset * 0.017453292F).add(getPositionVector());
+            moveDiggingToward(target.x, target.y, target.z, 3.0D);
+            setTargetDigPitch(collidedHorizontally ? -45.0F : 0.0F);
+            riderLeapRot = rotationYaw;
+        }
+        if (isMouthOpen()) {
+            attackAllAroundMouth((float) getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue(), 2.0F);
+        }
+        setBiting(false);
+    }
+
     public static boolean canDigBlock(World world, BlockPos pos) {
         IBlockState state = world.getBlockState(pos);
         return state.getMaterial().isSolid() && state.isFullCube() && state.getBlockHardness(world, pos) >= 0.0F && state.getBlock() != Blocks.BEDROCK && state.getBlock() != Blocks.BARRIER;
@@ -374,7 +503,7 @@ public class GumWormEntity extends EntityMob {
         @Override
         public boolean shouldExecute() {
             EntityLivingBase target = getAttackTarget();
-            return target != null && target.isEntityAlive();
+            return !isRidingMode() && target != null && target.isEntityAlive();
         }
 
         @Override
@@ -432,6 +561,9 @@ public class GumWormEntity extends EntityMob {
 
         @Override
         public boolean shouldExecute() {
+            if (isRidingMode()) {
+                return false;
+            }
             if (getAttackTarget() != null && getAttackTarget().isEntityAlive()) {
                 return false;
             }
@@ -448,7 +580,7 @@ public class GumWormEntity extends EntityMob {
 
         @Override
         public boolean shouldContinueExecuting() {
-            return target != null && isDigging() && getDistanceSq(target.x, target.y, target.z) > 4.0D;
+            return !isRidingMode() && target != null && isDigging() && getDistanceSq(target.x, target.y, target.z) > 4.0D;
         }
 
         @Override

@@ -17,6 +17,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 public class MetalBarrelTileEntity extends TileEntity implements IInventory {
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private int viewers;
+    private String customName;
 
     @Override
     public int getSizeInventory() {
@@ -63,17 +64,22 @@ public class MetalBarrelTileEntity extends TileEntity implements IInventory {
 
     @Override
     public String getName() {
-        return "container.alexscaves.metal_barrel";
+        return hasCustomName() ? customName : "container.alexscaves.metal_barrel";
     }
 
     @Override
     public boolean hasCustomName() {
-        return false;
+        return customName != null && !customName.isEmpty();
     }
 
     @Override
     public ITextComponent getDisplayName() {
-        return new TextComponentTranslation("tile.alexscaves.metal_barrel.name");
+        return hasCustomName() ? new net.minecraft.util.text.TextComponentString(customName) : new TextComponentTranslation("tile.alexscaves.metal_barrel.name");
+    }
+
+    public void setCustomInventoryName(String customName) {
+        this.customName = customName;
+        markDirty();
     }
 
     @Override
@@ -138,6 +144,9 @@ public class MetalBarrelTileEntity extends TileEntity implements IInventory {
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         ItemStackHelper.saveAllItems(compound, items);
+        if (hasCustomName()) {
+            compound.setString("CustomName", customName);
+        }
         return compound;
     }
 
@@ -146,5 +155,6 @@ public class MetalBarrelTileEntity extends TileEntity implements IInventory {
         super.readFromNBT(compound);
         items = NonNullList.withSize(getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, items);
+        customName = compound.hasKey("CustomName", 8) ? compound.getString("CustomName") : null;
     }
 }

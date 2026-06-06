@@ -7,10 +7,13 @@ import com.zzhalex233.alexscaves.server.entity.living.NotorEntity;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -66,6 +69,61 @@ public class NotorRenderer extends RenderLiving<NotorEntity> {
     @Override
     protected ResourceLocation getEntityTexture(NotorEntity entity) {
         return TEXTURE;
+    }
+
+    public static void renderEntityInHologram(Entity entity, double x, double y, double z, float yaw, float partialTicks) {
+        RenderManager manager = net.minecraft.client.Minecraft.getMinecraft().getRenderManager();
+        Render<? super Entity> render = manager.getEntityRenderObject(entity);
+        if (render == null) {
+            return;
+        }
+        float prevRotationYaw = entity.prevRotationYaw;
+        float rotationYaw = entity.rotationYaw;
+        float prevRotationPitch = entity.prevRotationPitch;
+        float rotationPitch = entity.rotationPitch;
+        float prevRenderYawOffset = 0.0F;
+        float renderYawOffset = 0.0F;
+        float prevRotationYawHead = 0.0F;
+        float rotationYawHead = 0.0F;
+        if (entity instanceof EntityLivingBase) {
+            EntityLivingBase living = (EntityLivingBase) entity;
+            prevRenderYawOffset = living.prevRenderYawOffset;
+            renderYawOffset = living.renderYawOffset;
+            prevRotationYawHead = living.prevRotationYawHead;
+            rotationYawHead = living.rotationYawHead;
+            living.prevRenderYawOffset = 0.0F;
+            living.renderYawOffset = 0.0F;
+            living.prevRotationYawHead = 0.0F;
+            living.rotationYawHead = 0.0F;
+        }
+        entity.prevRotationYaw = 0.0F;
+        entity.rotationYaw = 0.0F;
+        entity.prevRotationPitch = 0.0F;
+        entity.rotationPitch = 0.0F;
+        GlStateManager.enableBlend();
+        GlStateManager.disableLighting();
+        GlStateManager.disableCull();
+        GlStateManager.depthMask(false);
+        GlStateManager.color(0.45F, 0.85F, 1.0F, 0.7F);
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+        render.doRender(entity, x, y, z, yaw, partialTicks);
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.depthMask(true);
+        GlStateManager.enableCull();
+        GlStateManager.enableLighting();
+        GlStateManager.disableBlend();
+        entity.prevRotationYaw = prevRotationYaw;
+        entity.rotationYaw = rotationYaw;
+        entity.prevRotationPitch = prevRotationPitch;
+        entity.rotationPitch = rotationPitch;
+        if (entity instanceof EntityLivingBase) {
+            EntityLivingBase living = (EntityLivingBase) entity;
+            living.prevRenderYawOffset = prevRenderYawOffset;
+            living.renderYawOffset = renderYawOffset;
+            living.prevRotationYawHead = prevRotationYawHead;
+            living.rotationYawHead = rotationYawHead;
+        }
     }
 
     private class LayerGlow implements LayerRenderer<NotorEntity> {

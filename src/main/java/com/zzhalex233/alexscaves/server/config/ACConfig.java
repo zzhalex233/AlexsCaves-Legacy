@@ -9,10 +9,12 @@ public class ACConfig {
     private static boolean onlyOneResearchNeeded;
     private static int darknessCloakChargeTime;
     private static int darknessCloakFlightTime;
+    private static int amberMonolithMeanTime;
     private static int nucleeperFuseTime;
     private static int nukeMaxBlockExplosionResistance;
     private static boolean nukesSpawnItemDrops;
     private static double nukeExplosionSizeModifier;
+    private static boolean totemOfPossessionPlayers;
 
     public static void load(File file) {
         Configuration config = new Configuration(file);
@@ -45,6 +47,14 @@ public class ACConfig {
             Integer.MAX_VALUE,
             "Ticks of Darkness Incarnate granted after the cloak finishes charging."
         );
+        amberMonolithMeanTime = config.getInt(
+            "amberMonolithMeanTime",
+            Configuration.CATEGORY_GENERAL,
+            32000,
+            1000,
+            Integer.MAX_VALUE,
+            "How long in ticks it usually takes for an Amber Monolith to spawn an animal."
+        );
         nucleeperFuseTime = config.getInt(
             "nucleeperFuseTime",
             Configuration.CATEGORY_GENERAL,
@@ -75,6 +85,12 @@ public class ACConfig {
             Float.MAX_VALUE,
             "Scale modifier for nuclear explosion destruction radius."
         );
+        totemOfPossessionPlayers = config.getBoolean(
+            "totemOfPossessionPlayers",
+            Configuration.CATEGORY_GENERAL,
+            true,
+            "Whether the Totem of Possession can bind and control players."
+        );
         if (config.hasChanged()) {
             config.save();
         }
@@ -96,6 +112,10 @@ public class ACConfig {
         return darknessCloakFlightTime;
     }
 
+    public static int getAmberMonolithMeanTime() {
+        return amberMonolithMeanTime;
+    }
+
     public static int getNucleeperFuseTime() {
         return nucleeperFuseTime;
     }
@@ -110,5 +130,9 @@ public class ACConfig {
 
     public static double getNukeExplosionSizeModifier() {
         return nukeExplosionSizeModifier;
+    }
+
+    public static boolean doesTotemOfPossessionWorkOnPlayers() {
+        return totemOfPossessionPlayers;
     }
 }

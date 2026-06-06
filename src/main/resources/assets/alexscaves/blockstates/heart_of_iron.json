@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "alexscaves:heart_of_iron",
+      "y": 90
+    },
+    "axis=y": {
+      "model": "alexscaves:heart_of_iron",
+      "x": 90
+    },
+    "axis=z": {
+      "model": "alexscaves:heart_of_iron"
+    }
+  }
+}

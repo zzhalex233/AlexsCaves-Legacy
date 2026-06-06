@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=down,powered=false": { "model": "alexscaves:siren_light" },
+    "facing=down,powered=true": { "model": "alexscaves:siren_light" },
+    "facing=up,powered=false": { "model": "alexscaves:siren_light" },
+    "facing=up,powered=true": { "model": "alexscaves:siren_light" },
+    "facing=north,powered=false": { "model": "alexscaves:siren_light" },
+    "facing=north,powered=true": { "model": "alexscaves:siren_light" },
+    "facing=south,powered=false": { "model": "alexscaves:siren_light" },
+    "facing=south,powered=true": { "model": "alexscaves:siren_light" },
+    "facing=west,powered=false": { "model": "alexscaves:siren_light" },
+    "facing=west,powered=true": { "model": "alexscaves:siren_light" },
+    "facing=east,powered=false": { "model": "alexscaves:siren_light" },
+    "facing=east,powered=true": { "model": "alexscaves:siren_light" }
+  }
+}

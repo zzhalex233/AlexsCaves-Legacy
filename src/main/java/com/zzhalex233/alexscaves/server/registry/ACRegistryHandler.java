@@ -8,8 +8,21 @@ import java.util.function.Supplier;
 import com.zzhalex233.alexscaves.AlexsCaves;
 import com.zzhalex233.alexscaves.server.block.ACBlockRegistry;
 import com.zzhalex233.alexscaves.server.block.fluid.ACFluidRegistry;
+import com.zzhalex233.alexscaves.server.block.entity.AbyssalAltarTileEntity;
+import com.zzhalex233.alexscaves.server.block.entity.ACSignTileEntity;
+import com.zzhalex233.alexscaves.server.block.entity.AmberMonolithTileEntity;
+import com.zzhalex233.alexscaves.server.block.entity.AmbersolTileEntity;
+import com.zzhalex233.alexscaves.server.block.entity.ConversionCrucibleTileEntity;
+import com.zzhalex233.alexscaves.server.block.entity.HologramProjectorTileEntity;
+import com.zzhalex233.alexscaves.server.block.entity.MagnetTileEntity;
 import com.zzhalex233.alexscaves.server.block.entity.MetalBarrelTileEntity;
 import com.zzhalex233.alexscaves.server.block.entity.MusselTileEntity;
+import com.zzhalex233.alexscaves.server.block.entity.NuclearFurnaceTileEntity;
+import com.zzhalex233.alexscaves.server.block.entity.NuclearSirenTileEntity;
+import com.zzhalex233.alexscaves.server.block.entity.QuarryTileEntity;
+import com.zzhalex233.alexscaves.server.block.entity.SirenLightTileEntity;
+import com.zzhalex233.alexscaves.server.block.entity.TeslaBulbTileEntity;
+import com.zzhalex233.alexscaves.server.enchantment.ACEnchantmentRegistry;
 import com.zzhalex233.alexscaves.server.entity.item.CinderBrickEntity;
 import com.zzhalex233.alexscaves.server.entity.item.GuanoEntity;
 import com.zzhalex233.alexscaves.server.item.ACItemRegistry;
@@ -20,6 +33,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
 import net.minecraft.dispenser.IPosition;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -113,6 +127,13 @@ public class ACRegistryHandler {
     }
 
     @SubscribeEvent
+    public static void registerEnchantments(RegistryEvent.Register<Enchantment> event) {
+        for (Enchantment enchantment : ACEnchantmentRegistry.ENCHANTMENTS) {
+            event.getRegistry().register(enchantment);
+        }
+    }
+
+    @SubscribeEvent
     public static void registerEffects(RegistryEvent.Register<Potion> event) {
         for (Potion effect : ACEffectRegistry.EFFECTS) {
             event.getRegistry().register(effect);
@@ -165,7 +186,11 @@ public class ACRegistryHandler {
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.ACID_BUCKET.item(), DispenseFluidContainer.getInstance());
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.RADGILL_BUCKET.item(), DispenseFluidContainer.getInstance());
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.PURPLE_SODA_BUCKET.item(), DispenseFluidContainer.getInstance());
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.TRILOCARIS_BUCKET.item(), DispenseFluidContainer.getInstance());
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.LANTERNFISH_BUCKET.item(), DispenseFluidContainer.getInstance());
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.TRIPODFISH_BUCKET.item(), DispenseFluidContainer.getInstance());
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.SEA_PIG_BUCKET.item(), DispenseFluidContainer.getInstance());
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.GOSSAMER_WORM_BUCKET.item(), DispenseFluidContainer.getInstance());
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ACItemRegistry.CINDER_BRICK.item(), new BehaviorProjectileDispense() {
             @Override
             protected IProjectile getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
@@ -191,8 +216,20 @@ public class ACRegistryHandler {
     }
 
     public static void registerTileEntities() {
+        TileEntity.register(AlexsCaves.MODID + ":ambersol", AmbersolTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":amber_monolith", AmberMonolithTileEntity.class);
         TileEntity.register(AlexsCaves.MODID + ":mussel", MusselTileEntity.class);
         TileEntity.register(AlexsCaves.MODID + ":metal_barrel", MetalBarrelTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":magnet", MagnetTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":hologram_projector", HologramProjectorTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":quarry", QuarryTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":nuclear_furnace", NuclearFurnaceTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":nuclear_siren", NuclearSirenTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":siren_light", SirenLightTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":tesla_bulb", TeslaBulbTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":abyssal_altar", AbyssalAltarTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":conversion_crucible", ConversionCrucibleTileEntity.class);
+        TileEntity.register(AlexsCaves.MODID + ":sign", ACSignTileEntity.class);
     }
 
     private static WoodLogOreDictionaryEntry woodLogOre(String oreName, ACBlockRegistry.BlockEntry block) {

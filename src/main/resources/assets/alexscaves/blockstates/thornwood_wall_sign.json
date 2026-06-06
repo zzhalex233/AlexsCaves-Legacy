@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "alexscaves:thornwood_sign" },
+    "facing=south": { "model": "alexscaves:thornwood_sign" },
+    "facing=west": { "model": "alexscaves:thornwood_sign" },
+    "facing=east": { "model": "alexscaves:thornwood_sign" }
+  }
+}

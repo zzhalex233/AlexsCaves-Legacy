@@ -18,6 +18,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 public class BucketableWaterMobItem extends Item {
@@ -76,6 +77,15 @@ public class BucketableWaterMobItem extends Item {
 
     protected net.minecraft.util.SoundEvent getEmptySound() {
         return SoundEvents.ITEM_BUCKET_EMPTY;
+    }
+
+    @Override
+    public String getItemStackDisplayName(ItemStack stack) {
+        String key = getTranslationKey(stack);
+        if (key.endsWith(".name")) {
+            key = key.substring(0, key.length() - 5);
+        }
+        return I18n.translateToLocal(key + ".name").trim();
     }
 
     private boolean canHoldBucketFluid(World world, BlockPos pos) {

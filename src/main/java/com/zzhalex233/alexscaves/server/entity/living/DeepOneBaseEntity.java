@@ -1,5 +1,11 @@
 package com.zzhalex233.alexscaves.server.entity.living;
 
+import com.zzhalex233.alexscaves.AlexsCaves;
+import com.zzhalex233.alexscaves.server.block.AbyssalAltarBlock;
+import com.zzhalex233.alexscaves.server.block.entity.AbyssalAltarTileEntity;
+import com.zzhalex233.alexscaves.server.item.ACItemRegistry;
+import com.zzhalex233.alexscaves.server.level.storage.ACWorldData;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -11,14 +17,25 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
+
+import java.util.List;
+import java.util.UUID;
 
 public abstract class DeepOneBaseEntity extends EntityMob {
     private static final DataParameter<Boolean> SWIMMING = EntityDataManager.createKey(DeepOneBaseEntity.class, DataSerializers.BOOLEAN);
@@ -26,6 +43,9 @@ public abstract class DeepOneBaseEntity extends EntityMob {
     protected int attackCooldown;
     protected float prevFishPitch;
     protected float fishPitch;
+    private BlockPos lastAltarPos;
+    private ItemStack tradedStack = ItemStack.EMPTY;
+    private int tradingTime;
 
     protected DeepOneBaseEntity(World world) {
         super(world);
@@ -43,9 +63,10 @@ public abstract class DeepOneBaseEntity extends EntityMob {
     @Override
     protected void initEntityAI() {
         tasks.addTask(0, new DeepOneAttackAI());
-        tasks.addTask(1, new DeepOneWanderAI());
-        tasks.addTask(2, new EntityAIWatchClosest(this, EntityPlayer.class, 16.0F));
-        tasks.addTask(3, new EntityAILookIdle(this));
+        tasks.addTask(1, new DeepOneBarterAI());
+        tasks.addTask(2, new DeepOneWanderAI());
+        tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 16.0F));
+        tasks.addTask(4, new EntityAILookIdle(this));
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
         targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
     }
@@ -83,6 +104,9 @@ public abstract class DeepOneBaseEntity extends EntityMob {
         }
         if (attackCooldown > 0) {
             attackCooldown--;
+        }
+        if (!world.isRemote && tradingTime > 0) {
+            updateTrading();
         }
         setSoundsAngry(getAttackTarget() != null);
     }
@@ -163,6 +187,83 @@ public abstract class DeepOneBaseEntity extends EntityMob {
 
     protected abstract SoundEvent getHostileSound();
 
+    private void updateTrading() {
+        tradingTime--;
+        if (lastAltarPos == null) {
+            tradedStack = ItemStack.EMPTY;
+            return;
+        }
+        getLookHelper().setLookPosition(lastAltarPos.getX() + 0.5D, lastAltarPos.getY() + 1.0D, lastAltarPos.getZ() + 0.5D, 10.0F, getVerticalFaceSpeed());
+        if (tradingTime == 14) {
+            TileEntityLookup lookup = altarAt(lastAltarPos);
+            if (lookup != null && lookup.altar.getStackInSlot(0).isEmpty()) {
+                ItemStack loot = generateBarterLoot();
+                lookup.altar.setInventorySlotContents(0, loot);
+                lookup.altar.onEntityInteract(this, false);
+            } else if (!tradedStack.isEmpty()) {
+                entityDropItem(tradedStack.copy(), 0.0F);
+            }
+            tradedStack = ItemStack.EMPTY;
+        }
+    }
+
+    private ItemStack generateBarterLoot() {
+        if (world instanceof WorldServer) {
+            LootTable table = ((WorldServer) world).getLootTableManager().getLootTableFromLocation(getBarterLootTable());
+            LootContext context = new LootContext(0.0F, (WorldServer) world, ((WorldServer) world).getLootTableManager(), this, null, null);
+            List<ItemStack> loot = table.generateLootForPools(rand, context);
+            if (!loot.isEmpty()) {
+                return loot.get(0);
+            }
+        }
+        return new ItemStack(Items.PRISMARINE_SHARD, 4 + rand.nextInt(8));
+    }
+
+    protected ResourceLocation getBarterLootTable() {
+        if (this instanceof DeepOneMageEntity) {
+            return new ResourceLocation(AlexsCaves.MODID, "gameplay/deep_one_mage_barter");
+        }
+        if (this instanceof DeepOneKnightEntity) {
+            return new ResourceLocation(AlexsCaves.MODID, "gameplay/deep_one_knight_barter");
+        }
+        return new ResourceLocation(AlexsCaves.MODID, "gameplay/deep_one_barter");
+    }
+
+    private static boolean isDeepOneBarter(ItemStack stack) {
+        return !stack.isEmpty() && (stack.getItem() == ACItemRegistry.PEARL.item() || stack.getItem() == Items.PRISMARINE_CRYSTALS);
+    }
+
+    private TileEntityLookup altarAt(BlockPos pos) {
+        if (pos == null || !(world.getBlockState(pos).getBlock() instanceof AbyssalAltarBlock) || !(world.getTileEntity(pos) instanceof AbyssalAltarTileEntity)) {
+            return null;
+        }
+        return new TileEntityLookup((AbyssalAltarTileEntity) world.getTileEntity(pos));
+    }
+
+    @Override
+    public void writeEntityToNBT(NBTTagCompound compound) {
+        super.writeEntityToNBT(compound);
+        if (lastAltarPos != null) {
+            compound.setInteger("AltarX", lastAltarPos.getX());
+            compound.setInteger("AltarY", lastAltarPos.getY());
+            compound.setInteger("AltarZ", lastAltarPos.getZ());
+        }
+        if (!tradedStack.isEmpty()) {
+            compound.setTag("TradedStack", tradedStack.writeToNBT(new NBTTagCompound()));
+        }
+        compound.setInteger("TradingTime", tradingTime);
+    }
+
+    @Override
+    public void readEntityFromNBT(NBTTagCompound compound) {
+        super.readEntityFromNBT(compound);
+        if (compound.hasKey("AltarX") && compound.hasKey("AltarY") && compound.hasKey("AltarZ")) {
+            lastAltarPos = new BlockPos(compound.getInteger("AltarX"), compound.getInteger("AltarY"), compound.getInteger("AltarZ"));
+        }
+        tradedStack = compound.hasKey("TradedStack", 10) ? new ItemStack(compound.getCompoundTag("TradedStack")) : ItemStack.EMPTY;
+        tradingTime = compound.getInteger("TradingTime");
+    }
+
     private class DeepOneAttackAI extends EntityAIBase {
         private DeepOneAttackAI() {
             setMutexBits(3);
@@ -205,6 +306,95 @@ public abstract class DeepOneBaseEntity extends EntityMob {
             } else {
                 getNavigator().tryMoveToXYZ(posX + rand.nextDouble() * 12.0D - 6.0D, posY, posZ + rand.nextDouble() * 12.0D - 6.0D, 1.0D);
             }
+        }
+    }
+
+    private class DeepOneBarterAI extends EntityAIBase {
+        private BlockPos altarPos;
+        private int cooldown = 20;
+
+        private DeepOneBarterAI() {
+            setMutexBits(3);
+        }
+
+        @Override
+        public boolean shouldExecute() {
+            if (getAttackTarget() != null || tradingTime > 0 || --cooldown > 0) {
+                return false;
+            }
+            cooldown = 100 + rand.nextInt(80);
+            altarPos = findNearbyAltar();
+            return altarPos != null;
+        }
+
+        @Override
+        public boolean shouldContinueExecuting() {
+            TileEntityLookup lookup = altarAt(altarPos);
+            return lookup != null && isDeepOneBarter(lookup.altar.getStackInSlot(0)) && getAttackTarget() == null && tradingTime <= 0 && getDistanceSqToCenter(altarPos) < 80.0D;
+        }
+
+        @Override
+        public void resetTask() {
+            altarPos = null;
+        }
+
+        @Override
+        public void updateTask() {
+            getLookHelper().setLookPosition(altarPos.getX() + 0.5D, altarPos.getY() + 1.0D, altarPos.getZ() + 0.5D, 10.0F, getVerticalFaceSpeed());
+            if (getDistanceSqToCenter(altarPos) > 9.0D) {
+                getNavigator().tryMoveToXYZ(altarPos.getX() + 0.5D, altarPos.getY(), altarPos.getZ() + 0.5D, 1.0D);
+                return;
+            }
+            TileEntityLookup lookup = altarAt(altarPos);
+            if (lookup != null && lookup.altar.queueItemDrop(lookup.altar.getStackInSlot(0).copy())) {
+                tradedStack = lookup.altar.getStackInSlot(0).copy();
+                lookup.altar.onEntityInteract(DeepOneBaseEntity.this, true);
+                lookup.altar.setInventorySlotContents(0, ItemStack.EMPTY);
+                lastAltarPos = altarPos;
+                tradingTime = 40;
+                addReputation(lookup.altar, 5);
+                getNavigator().clearPath();
+            }
+        }
+
+        private BlockPos findNearbyAltar() {
+            if (lastAltarPos != null && isValidAltar(lastAltarPos)) {
+                return lastAltarPos;
+            }
+            BlockPos origin = getPosition();
+            BlockPos best = null;
+            double bestDistance = Double.MAX_VALUE;
+            for (BlockPos pos : BlockPos.getAllInBoxMutable(origin.add(-16, -8, -16), origin.add(16, 8, 16))) {
+                if (isValidAltar(pos)) {
+                    double distance = getDistanceSqToCenter(pos);
+                    if (distance < bestDistance) {
+                        bestDistance = distance;
+                        best = pos.toImmutable();
+                    }
+                }
+            }
+            return best;
+        }
+
+        private boolean isValidAltar(BlockPos pos) {
+            TileEntityLookup lookup = altarAt(pos);
+            return lookup != null && isDeepOneBarter(lookup.altar.getStackInSlot(0)) && !world.getBlockState(pos).getValue(AbyssalAltarBlock.ACTIVE) && world.getTotalWorldTime() - lookup.altar.getLastInteractionTime() >= 40L;
+        }
+
+        private void addReputation(AbyssalAltarTileEntity altar, int amount) {
+            ACWorldData data = ACWorldData.get(world);
+            UUID uuid = altar.getPlacingPlayer();
+            if (data != null && uuid != null) {
+                data.setDeepOneReputation(uuid, data.getDeepOneReputation(uuid) + amount);
+            }
+        }
+    }
+
+    private static class TileEntityLookup {
+        private final AbyssalAltarTileEntity altar;
+
+        private TileEntityLookup(AbyssalAltarTileEntity altar) {
+            this.altar = altar;
         }
     }
 }

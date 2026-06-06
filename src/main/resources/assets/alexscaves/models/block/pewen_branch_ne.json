@@ -1,0 +1,16 @@
+{
+	"parent": "alexscaves:block/pewen_branch_base_ne",
+	"textures": {
+		"branch": "alexscaves:blocks/pewen/pewen_branch",
+		"branch_top": "alexscaves:blocks/pewen/pewen_branch_top",
+		"pines1": "alexscaves:blocks/pewen/no_pines",
+		"pines2": "alexscaves:blocks/pewen/no_pines",
+		"pines3": "alexscaves:blocks/pewen/no_pines",
+		"pines4": "alexscaves:blocks/pewen/no_pines",
+		"pines5": "alexscaves:blocks/pewen/no_pines",
+		"pines6": "alexscaves:blocks/pewen/no_pines",
+		"pines7": "alexscaves:blocks/pewen/no_pines",
+		"pines8": "alexscaves:blocks/pewen/no_pines",
+		"particle": "alexscaves:blocks/pewen/pewen_branch"
+	}
+}

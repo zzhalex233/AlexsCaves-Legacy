@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "alexscaves:pewen_sign" },
+    "facing=south": { "model": "alexscaves:pewen_sign" },
+    "facing=west": { "model": "alexscaves:pewen_sign" },
+    "facing=east": { "model": "alexscaves:pewen_sign" }
+  }
+}

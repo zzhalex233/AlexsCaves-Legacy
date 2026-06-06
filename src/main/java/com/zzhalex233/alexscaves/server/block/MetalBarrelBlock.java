@@ -82,6 +82,13 @@ public class MetalBarrelBlock extends BlockDirectional {
     }
 
     @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, net.minecraft.item.ItemStack stack) {
+        if (stack.hasDisplayName() && world.getTileEntity(pos) instanceof MetalBarrelTileEntity) {
+            ((MetalBarrelTileEntity) world.getTileEntity(pos)).setCustomInventoryName(stack.getDisplayName());
+        }
+    }
+
+    @Override
     public IBlockState withRotation(IBlockState state, Rotation rot) {
         return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
     }

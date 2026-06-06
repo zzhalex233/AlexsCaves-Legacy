@@ -17,6 +17,16 @@ public class GossamerWormRenderer extends RenderLiving<GossamerWormEntity> {
     }
 
     @Override
+    public void doRender(GossamerWormEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.disableCull();
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        GlStateManager.enableCull();
+        GlStateManager.disableBlend();
+    }
+
+    @Override
     protected void preRenderCallback(GossamerWormEntity entity, float partialTickTime) {
         GlStateManager.scale(0.9F, 0.9F, 0.9F);
     }

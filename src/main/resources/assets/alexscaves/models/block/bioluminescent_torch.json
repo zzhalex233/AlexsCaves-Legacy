@@ -1,0 +1,6 @@
+{
+  "parent": "block/normal_torch",
+  "textures": {
+    "torch": "alexscaves:block/bioluminescent_torch"
+  }
+}
